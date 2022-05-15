@@ -1,7 +1,8 @@
 #pragma once
 
 #include "my_iterator.hpp"
-#include "stack"
+#include <stack>
+#include <map>
 
 using namespace std;
 
@@ -11,8 +12,8 @@ namespace ariel
     {
         string name;
         Node* supirior;
-        vector<Node> his_workers;
-    }worker , *workers;
+        vector<Node*> his_workers;
+    }worker , *p_worker;
 
 
     class OrgChart
@@ -20,10 +21,11 @@ namespace ariel
         private:
         
         vector<worker> employees;
-        worker* root;
-        // string* level_order;
-        // string* pre_order;
-        // string* reversr_order;
+        p_worker root;
+        vector<p_worker> print_prity;
+        string* level_order_it;
+        string* pre_order_it;
+        string* reverse_order_it;
 
         public:
         
@@ -34,11 +36,16 @@ namespace ariel
         int get_size(){
             return employees.size();
         }
+        vector<p_worker> get_print_prity(){
+            return this->print_prity;
+        }
+        vector<worker> get_employees(){
+            return this->employees;
+        }
+        
+
         worker& get_emp_at(int pos){
             return employees.at((unsigned int)pos);
-        }
-        void add_employee(worker &emp){
-            employees.emplace_back(emp);
         }
         void del_employee(worker &emp){
             for (int i = 0; i < employees.size(); i++)
@@ -47,7 +54,7 @@ namespace ariel
                 {
                     for (int j = 0; j < employees.at((unsigned int)j).his_workers.size(); j++)
                     {
-                        employees.at((unsigned int)i).his_workers.at((unsigned int)j).supirior = employees.at((unsigned int)i).supirior; 
+                        employees.at((unsigned int)i).his_workers.at((unsigned int)j)->supirior = employees.at((unsigned int)i).supirior; 
                     }
                     employees.erase(employees.begin() + i);
                     break;
