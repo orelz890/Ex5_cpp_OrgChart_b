@@ -1,6 +1,7 @@
 #pragma once
 
 #include "my_iterator.hpp"
+#include "stack"
 
 using namespace std;
 
@@ -19,6 +20,10 @@ namespace ariel
         private:
         
         vector<worker> employees;
+        worker* root;
+        // string* level_order;
+        // string* pre_order;
+        // string* reversr_order;
 
         public:
         
