@@ -24,6 +24,12 @@ namespace ariel
             this->supirior = supirior;
             this->his_workers.clear();
         }
+        worker& operator=(worker& w){
+            this->name = w.name;
+            this->supirior = w.supirior;
+            this->his_workers = w.his_workers;
+            return *this;
+        }
     }worker , *p_worker;
 
     class OrgChart

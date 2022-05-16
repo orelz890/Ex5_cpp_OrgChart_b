@@ -10,20 +10,20 @@ using namespace ariel;
 int main(){
 
     OrgChart organization;
-    // organization.add_root("CEO")
-    //   .add_sub("CEO", "CTO")         // Now the CTO is subordinate to the CEO
-    //   .add_sub("CEO", "CFO")         // Now the CFO is subordinate to the CEO
-    //   .add_sub("CEO", "COO")         // Now the COO is subordinate to the CEO
-    //   .add_sub("CTO", "VP_SW") // Now the VP Software is subordinate to the CTO
-    //   .add_sub("COO", "VP_BI")      // Now the VP_BI is subordinate to the COO
-    //   .add_sub("CEO", "AAA")
-    //   .add_sub("CEO", "BBB");
     organization.add_root("CEO")
-    .add_sub("CEO", "CTO")
-    .add_sub("CEO", "CFO")
-    .add_sub("CEO", "COO")
-    .add_sub("CEO", "AAA")
-    .add_sub("CEO", "BBB");
+      .add_sub("CEO", "CTO")         // Now the CTO is subordinate to the CEO
+      .add_sub("CEO", "CFO")         // Now the CFO is subordinate to the CEO
+      .add_sub("CEO", "COO")         // Now the COO is subordinate to the CEO
+      .add_sub("CTO", "VP_SW") // Now the VP Software is subordinate to the CTO
+      .add_sub("COO", "VP_BI")      // Now the VP_BI is subordinate to the COO
+      .add_sub("CEO", "AAA")
+      .add_sub("CEO", "BBB");
+    // organization.add_root("CEO")
+    // .add_sub("CEO", "CTO")
+    // .add_sub("CEO", "CFO")
+    // .add_sub("CEO", "COO")
+    // .add_sub("CEO", "AAA")
+    // .add_sub("CEO", "BBB");
     
     cout<< organization.get_employees().at(0).his_workers.at(0)->name << "\n\n";
     cout << "im in main\n";

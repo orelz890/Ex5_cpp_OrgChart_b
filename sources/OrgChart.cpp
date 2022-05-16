@@ -22,12 +22,12 @@ namespace ariel
         {
             this->employees.emplace_back(supirior_name,temp);
         }
-        else
-        {
-            worker new_emp{supirior_name,temp};
-            new_emp.his_workers = this->employees.at(0).his_workers;
-            this->employees.at(0) = new_emp;
-        }
+        // else
+        // {
+        //     worker new_emp{supirior_name,temp};
+        //     new_emp.his_workers = this->employees.at(0).his_workers;
+        //     this->employees.at(0) = new_emp;
+        // }
         return *this;
     }
 
@@ -37,9 +37,10 @@ namespace ariel
         {
             if (this->employees.at(i).name == supirior)
             {
+                int last_element = this->get_size();
                 this->employees.emplace_back(new_emp, supirior);
-                int last_element = this->get_size() - 1;
                 this->employees.at(i).his_workers.emplace_back(&(this->employees.at(last_element)));
+                // this->employees.at(i).his_workers.at(last_element - 1) =            
                 cout << this->employees.at(i).name << " is " << this->employees.at(last_element).name
                      << "'s supirior and he has: " << this->employees.at(i).his_workers.size() << " subordinates:\n";
                 break;
