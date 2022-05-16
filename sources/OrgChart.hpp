@@ -22,12 +22,17 @@ namespace ariel
         worker(string name, string supirior){
             this->name = name;
             this->supirior = supirior;
-            this->his_workers.clear();
+            // this->his_workers.clear();
         }
         worker& operator=(worker& w){
             this->name = w.name;
             this->supirior = w.supirior;
             this->his_workers = w.his_workers;
+            // for (int i = 0; i < w.his_workers.size(); i++)
+            // {
+            //     this->his_workers.emplace_back(w.his_workers.at(i));
+            // }
+            
             return *this;
         }
     }worker , *p_worker;
