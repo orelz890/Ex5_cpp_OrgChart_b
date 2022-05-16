@@ -22,12 +22,12 @@ namespace ariel
         {
             this->employees.emplace_back(supirior_name,temp);
         }
-        // else
-        // {
-        //     worker new_emp{supirior_name,temp};
-        //     new_emp.his_workers = this->employees.at(0).his_workers;
-        //     this->employees.at(0) = new_emp;
-        // }
+        else
+        {
+            worker new_emp{supirior_name,temp};
+            new_emp.his_workers = this->employees.at(0).his_workers;
+            this->employees.at(0) = new_emp;
+        }
         return *this;
     }
 
@@ -194,16 +194,16 @@ namespace ariel
         }
         // Prity drawing
         output << '\n'
-               << string((longest_str - 3)/2, ' ') << "p\\c" << string(longest_str- (longest_str - 3)/2 -3, ' ')<< '|';
+               << string((longest_str - 3)/2, ' ') << "p\\c" << string(longest_str- (longest_str - 3)/2 -2, ' ')<< '|';
         for (worker& emp : new_data.employees)
         {
-            output << emp.name << string(longest_str - emp.name.size() + 1, ' ') << '|';
+            output <<string((longest_str - emp.name.size())/2, ' ') << emp.name << string((longest_str - emp.name.size())/2 + 1, ' ') << '|';
         }
         output << '\n'
-               << string((longest_str + 3) * (new_data.employees.size() + 2), '-') << '\n';
+               << string((longest_str + 2) * (new_data.employees.size() + 1), '-') << '\n';
         for (worker& perent : new_data.employees)
         {
-            output << perent.name << string(longest_str - perent.name.size(), ' ') << '|';
+            output << string((longest_str - perent.name.size())/2, ' ') << perent.name << string((longest_str - perent.name.size())/2 + 1, ' ') << '|';
             for (worker& child : new_data.employees)
             {
                 pair<string, string> pos = {perent.name, child.name};
