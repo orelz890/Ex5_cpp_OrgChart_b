@@ -7,45 +7,44 @@ namespace ariel
 {
     OrgChart::OrgChart()
     {
-        this->root = NULL;
+        this->employees.clear();
+        int longest_str = 0;
+        string* level_order_it = NULL;
+        string* pre_order_it = NULL;
+        string* reverse_order_it = NULL;
     }
 
     // Funcs
     OrgChart& OrgChart::add_root(string supirior_name)
     {
-
-        worker new_emp;
-        new_emp.name = supirior_name;
-
+        string temp;
         if (this->employees.empty())
         {
-            employees.emplace_back(new_emp);
+            this->employees.emplace_back(supirior_name,temp);
         }
         else
         {
+            worker new_emp{supirior_name,temp};
             new_emp.his_workers = this->employees.at(0).his_workers;
             this->employees.at(0) = new_emp;
         }
-        this->root = &this->employees.at(0);
-        cout << this->root->name << " is the root now and the size is: " << this->get_size() << "\n";
         return *this;
     }
 
     OrgChart& OrgChart::add_sub(string supirior, string new_emp)
     {
-        worker temp;
-        temp.name = new_emp;
-
         for (int i = 0; i < this->get_size(); i++)
         {
             if (this->employees.at(i).name == supirior)
             {
-                this->employees.emplace_back(temp);
-                this->employees.at(this->get_size() - 1).supirior = this->employees.at(i).name;
-                this->employees.at(i).his_workers.emplace_back(&(this->employees.at(this->get_size() - 1)));
-                cout << this->employees.at(i).name << " is " << new_emp << "'s supirior and he has: " << this->employees.at(i).his_workers.size() << " subordinates:\n";
-            }  
-        }    
+                this->employees.emplace_back(new_emp, supirior);
+                int last_element = this->get_size() - 1;
+                this->employees.at(i).his_workers.emplace_back(&(this->employees.at(last_element)));
+                cout << this->employees.at(i).name << " is " << this->employees.at(last_element).name
+                     << "'s supirior and he has: " << this->employees.at(i).his_workers.size() << " subordinates:\n";
+                break;
+            }
+        }
         return *this;
     }
 
@@ -73,13 +72,8 @@ namespace ariel
             {
                 p_worker supirior = Q.front();
                 ans[i++] = supirior->name;
-                cout << supirior->name << " has: " << supirior->his_workers.size() << " workers under him:\n";
-                fflush(stdout);
-
                 for (int j = 0; j < supirior->his_workers.size(); j++)
                 {
-                    cout << supirior->his_workers.at(j)->name << "\n";
-                    fflush(stdout);
                     Q.push(supirior->his_workers.at(j));
                 }
                 Q.pop();
@@ -173,16 +167,26 @@ namespace ariel
                     longest_str = perent.name.size() > child.name.size() ? perent.name.size() : child.name.size();
                 }
             }
+
         }
         // Fill the mat --> if a is b's subordinate than mat(a,b) = 1
         for (worker& perent : new_data.employees)
         {
-            for (worker& child : new_data.employees)
+            // for (worker& child : new_data.employees)
+            // {
+            //     pair<string, string> temp = {perent.name, child.name};
+            //     if (child.supirior == perent.name)
+            //     {
+            //         cout << "perent = " << perent.name << " child = " << child.name << "child parent = "<< child.supirior << "\n";
+            //         mat[temp] = 1;
+            //     }
+            // }
+            for (p_worker child : perent.his_workers)
             {
-                pair<string, string> temp = {perent.name, child.name};
-                if (child.supirior == perent.name)
+                pair<string, string> temp = {perent.name, child->name};
+                if (child->supirior == perent.name)
                 {
-                    cout << "perent = " << perent.name << " child = " << child.name << "child parent = "<< child.supirior << "\n";
+                    cout << "perent = " << perent.name << " child = " << child->name << "child parent = "<< child->supirior << "\n";
                     mat[temp] = 1;
                 }
             }

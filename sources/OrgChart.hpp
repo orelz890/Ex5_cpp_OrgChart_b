@@ -13,20 +13,25 @@ namespace ariel
         string name;
         string supirior;
         vector<worker*> his_workers;
-        // Node operator=(Node& a){
-        //     this->name = a.name;
-        //     this->his_workers = a.his_workers;
-        //     this->supirior = a.supirior;
-        // }
+        worker(){}
+        worker(worker* w){
+            this->name = w->name;
+            this->supirior = w->supirior;
+            this->his_workers = w->his_workers;
+        }
+        worker(string name, string supirior){
+            this->name = name;
+            this->supirior = supirior;
+            this->his_workers.clear();
+        }
     }worker , *p_worker;
-
 
     class OrgChart
     {
         private:
         
         vector<worker> employees;
-        p_worker root;
+
         int longest_str;
         string* level_order_it;
         string* pre_order_it;
