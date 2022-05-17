@@ -3,25 +3,32 @@
 
 // namespace ariel
 // {
+//         T& my_iterator::operator*() const{
+//             return root.front()->name;
+//         }
+
+//         T* my_iterator::operator->() const{
+//             return &(this->front()->name);
+//         }
+
 //         my_iterator& my_iterator::operator++(){
-//             this->root.erase(this->root.begin());
+//             root.erase(root.begin());
 //             return *this;
 //         }
-//         my_iterator my_iterator::operator++(int){
+
+//         const my_iterator my_iterator::operator++(int){
 //             my_iterator ans = *this;
-//             (*this)++;
+//             root.erase(root.begin());
 //             return ans;
 //         }
+
 //         bool my_iterator::operator==(const my_iterator& element) const{
-//             if (!this->root.empty() && !element.root.empty())
-//             {
-//                 return this->root.at(0) == element.root.at(0);
-//             }
-//             return false;
+//             return root.size() > 0 && element.size() > 0 && root.front()->name == *element;
 //         }
 
 //         bool my_iterator::operator!=(const my_iterator& element) const{
-//             return !(*this == element);
+//             return !((*this) == element);
 //         }
+
 
 // }

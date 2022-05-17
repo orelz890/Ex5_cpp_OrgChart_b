@@ -15,8 +15,9 @@ int main(){
       .add_sub("CEO", "CFO")         // Now the CFO is subordinate to the CEO
       .add_sub("CEO", "COO")         // Now the COO is subordinate to the CEO
       .add_sub("CTO", "VP_SW") // Now the VP Software is subordinate to the CTO
-      .add_sub("COO", "VP_BI");      // Now the VP_BI is subordinate to the COO
-
+      .add_sub("COO", "VP_BI")      // Now the VP_BI is subordinate to the COO
+      .add_sub("CTO", "AAA")
+      .add_sub("AAA","BBB");
 
     // organization.add_root("CEO")
     // .add_sub("CEO", "CTO")
@@ -53,11 +54,15 @@ int main(){
     {
         cout<< "emp.name = " <<  emp.name << " childrens:\n";
         g = 0;
-        for (int j = 0; j < emp.his_workers.size(); j++)
+        for (unsigned long j = 0; j < emp.his_workers.size(); j++)
         {
             cout << g++ << ") " << emp.his_workers.at(j)->name << "\n";
         }
     }
+
+    my_iterator<string> it= organization.begin();
+    cout << *it << " ";
+    cout << *it++ << " " << *it << " ";
 
     // vector<worker> employees;
     // worker a;

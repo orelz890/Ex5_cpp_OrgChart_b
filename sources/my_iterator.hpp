@@ -29,14 +29,14 @@ namespace ariel
         }
 
         worker& operator=(worker& w){
-            this->name = w.name;
-            this->supirior = w.supirior;
-            this->his_workers = w.his_workers;
-            // for (int i = 0; i < w.his_workers.size(); i++)
-            // {
-            //     this->his_workers.emplace_back(w.his_workers.at(i));
-            // }
-            
+            *this = w;
+            // this->name = w.name;
+            // this->supirior = w.supirior;
+            // this->his_workers = w.his_workers;
+            // // for (int i = 0; i < w.his_workers.size(); i++)
+            // // {
+            // //     this->his_workers.emplace_back(w.his_workers.at(i));
+            // // }
             return *this;
         }
     }worker , *p_worker;
@@ -48,22 +48,32 @@ namespace ariel
 
         public:
         my_iterator(){
-
+            // root.clear();
         }
 
-        my_iterator(const vector<worker>& chart){
-            for (worker& w : chart)
+        my_iterator(p_worker node){
+            queue<p_worker> Q;
+            Q.push(node);
+
+            while (!Q.empty())
             {
-                root.emplace_back(&w);
+                p_worker w = Q.front();
+                this->root.push_back(w);
+                for (int i = 0; i < w->his_workers.size(); i++)
+                {
+                    Q.push(w->his_workers.at((unsigned long)i));
+                }
+                Q.pop();
             }
+            std::cout << root.size() << " nodes added to the iterator\n";
         }
 
-        T& operator*() const{     
+        T& operator*() const{
             return root.front()->name;
         }
 
         T* operator->() const{
-            return &(this->front()->name);
+            return &(this->root.front()->name);
         }
 
         my_iterator& operator++(){
@@ -78,14 +88,14 @@ namespace ariel
         }
 
         bool operator==(const my_iterator& element) const{
-            return root.size() > 0 && element.size() > 0 && root.front()->name == *element;
+            return root.size() > 0 && element.it_size() > 0 && root.front()->name == *element;
         }
 
         bool operator!=(const my_iterator& element) const{
-            return !((*this) == element);
+            return !(root.size() > 0 && element.it_size() > 0 && root.front()->name == *element);
         }
 
-        int size(){
+        int it_size() const{
             return root.size();
         }
 

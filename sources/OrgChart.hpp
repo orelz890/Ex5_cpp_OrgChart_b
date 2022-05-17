@@ -29,7 +29,6 @@ namespace ariel
         
         // Constructors
         OrgChart();
-        ~OrgChart();
 
         // Getter & setters
         int get_size(){
@@ -40,10 +39,10 @@ namespace ariel
         // }
         vector<worker> get_employees(){
             return this->employees;
-        }       
+        }
 
-        worker& get_emp_at(int pos){
-            return employees.at((unsigned int)pos);
+        p_worker get_emp_at(int pos){
+            return &employees.at((unsigned long)pos);
         }
 
         // Helpers:

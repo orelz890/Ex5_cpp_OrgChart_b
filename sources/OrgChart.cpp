@@ -14,10 +14,6 @@ namespace ariel
         string* reverse_order_it = NULL;
     }
 
-    OrgChart::~OrgChart(){
-        
-    }
-
     // Funcs
     OrgChart& OrgChart::add_root(string supirior_name)
     {
@@ -35,13 +31,13 @@ namespace ariel
 
     OrgChart& OrgChart::add_sub(string supirior, string new_emp)
     {
-        for (int i = 0; i < this->get_size(); i++)
+        for (unsigned long i = 0; i < this->get_size(); i++)
         {
             if (this->employees.at(i).name == supirior)
             {
                 int last_element = this->get_size();
                 this->employees.emplace_back(worker{new_emp, supirior});
-                this->employees.at(i).his_workers.emplace_back(&(this->employees.at(last_element)));
+                this->employees.at(i).his_workers.emplace_back(&(this->employees.at((unsigned long)last_element)));
                 // cout << this->employees.at(i).name << " is " << this->employees.at(last_element).name
                 //      << "'s supirior and he has: " << this->employees.at(i).his_workers.size() << " subordinates:\n";
                 break;
@@ -65,7 +61,7 @@ namespace ariel
                 new_order.emplace_back(supirior);
                 ans[i++] = supirior->name;
                 cout << "curr child = " << supirior->name << " and he has " << supirior->his_workers.size() << " childs\n"; 
-                for (int j = 0; j < supirior->his_workers.size(); j++)
+                for (unsigned long j = 0; j < supirior->his_workers.size(); j++)
                 {
                     Q.push(supirior->his_workers.at(j));
                 }
@@ -100,6 +96,11 @@ namespace ariel
         for (string& s : ans)
         {
             cout << s << "\n";
+        }
+        this->employees.clear();
+        for(p_worker w : new_order)
+        {
+            this->employees.emplace_back(*w);
         }
     }
 
@@ -152,7 +153,7 @@ namespace ariel
     my_iterator<string> OrgChart::begin_level_order()
     {
         this->level_order_tree();
-        return my_iterator<string>{this->employees};
+        return my_iterator<string>{&this->employees.front()};
     }
 
     my_iterator<string> OrgChart::end_level_order()
@@ -163,7 +164,7 @@ namespace ariel
     my_iterator<string> OrgChart::begin_reverse_order()
     {
         this->reverse_order_tree();
-        return my_iterator<string>{this->employees};
+        return my_iterator<string>{&this->employees.front()};
     }
 
     my_iterator<string> OrgChart::reverse_order()
@@ -174,7 +175,7 @@ namespace ariel
     my_iterator<string> OrgChart::begin_preorder()
     {
         this->pre_order_tree();
-        return my_iterator<string>{this->employees};
+        return my_iterator<string>{&this->employees.front()};
     }
 
     my_iterator<string> OrgChart::end_preorder()
@@ -188,7 +189,7 @@ namespace ariel
         // string *level_order_it = new_data.begin_level_order();
         int size = new_data.employees.size();
         map<pair<string, string>, int> mat;
-        int longest_str = 0;
+        unsigned long longest_str = 0;
 
         // Find the longest name & fill the mat --> if a is b's subordinate than mat(a,b) = 1 else mat(a,b) = 0.
         for (worker& perent : new_data.employees)
@@ -212,8 +213,9 @@ namespace ariel
         }
 
         // Prity drawing
+        unsigned long len = (longest_str - 3)/2;
         output << '\n'
-               << string((longest_str - 3)/2, ' ') << "p\\c" << string(longest_str- (longest_str - 3)/2 -2, ' ')<< '|';
+               << string(len, ' ') << "p\\c" << string(longest_str- len, ' ')<< '|';
         for (worker& emp : new_data.employees)
         {
             // varifiying that child is not root
