@@ -13,20 +13,20 @@ namespace ariel
         string* pre_order_it = NULL;
         string* reverse_order_it = NULL;
     }
-
+    OrgChart::~OrgChart(){
+        
+    }
     // Funcs
     OrgChart& OrgChart::add_root(string supirior_name)
     {
         string temp;
         if (this->employees.empty())
         {
-            this->employees.emplace_back(supirior_name,temp);
+            this->employees.emplace_back(worker{supirior_name,temp});
         }
         else
         {
-            worker new_emp{supirior_name,temp};
-            new_emp.his_workers = this->employees.at(0).his_workers;
-            this->employees.at(0) = new_emp;
+            this->employees.at(0).name = supirior_name;
         }
         return *this;
     }
@@ -38,7 +38,7 @@ namespace ariel
             if (this->employees.at(i).name == supirior)
             {
                 int last_element = this->get_size();
-                this->employees.emplace_back(new_emp, supirior);
+                this->employees.emplace_back(worker{new_emp, supirior});
                 this->employees.at(i).his_workers.emplace_back(&(this->employees.at(last_element)));
                 // cout << this->employees.at(i).name << " is " << this->employees.at(last_element).name
                 //      << "'s supirior and he has: " << this->employees.at(i).his_workers.size() << " subordinates:\n";
@@ -218,7 +218,7 @@ namespace ariel
                 }
             }
             output << "\n";
-            // output << "\n" << string((longest_str + 2) * (new_data.employees.size() + 1), '-') << '\n';
+            // output << "\n" << string((longest_str + 2) * (new_data.employees.size()), '-') << '\n';
         }
         return output << '\n';
     }

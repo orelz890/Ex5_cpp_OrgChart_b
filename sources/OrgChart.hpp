@@ -1,8 +1,13 @@
 #pragma once
 
-#include "my_iterator.hpp"
+// #include "my_iterator.hpp"
 #include <stack>
+#include <queue>
 #include <map>
+
+const int REVERSE_ORDER = 1;
+const int LEVEL_ORDER = 2;
+const int PRE_ORDER = 3;
 
 using namespace std;
 
@@ -24,6 +29,7 @@ namespace ariel
             this->supirior = supirior;
             // this->his_workers.clear();
         }
+
         worker& operator=(worker& w){
             this->name = w.name;
             this->supirior = w.supirior;
@@ -39,8 +45,64 @@ namespace ariel
 
     class OrgChart
     {
-        private:
-        
+        template<typename T> class my_iterator{
+
+            private:
+            OrgChart* my_chart;
+            int order_flag;
+            int pos;
+
+
+            public:
+            my_iterator(OrgChart& chart, const int flag){
+                this->my_chart = &chart;
+                this->order_flag = flag;
+                this->pos = 0;
+
+                if (flag == 1)
+                {
+                    
+                }
+                else if(flag == 2)
+                {
+
+                }
+                else if(flag == 3){
+
+                }
+            }
+
+            T& operator*() const{
+                return this->root.at(pos)->name;
+            }
+
+            T* operator->() const{
+                return &(this->root.at(pos)->name);
+            }
+
+            my_iterator& operator++(){
+                pos++;
+                return *this;
+            }
+
+            const my_iterator operator++(int){
+                my_iterator ans = *this;
+                pos++;
+                return ans;
+            }
+
+            bool operator==(const my_iterator& element) const{
+                return this->root.at(pos)->name == element.root.at(element.pos)->name;
+            }
+
+            bool operator!=(const my_iterator& element) const{
+                return !((*this) == element);
+            }
+
+
+        };
+
+        private:     
         vector<worker> employees;
 
         int longest_str;
@@ -52,6 +114,7 @@ namespace ariel
         
         // Constructors
         OrgChart();
+        ~OrgChart();
 
         // Getter & setters
         int get_size(){
