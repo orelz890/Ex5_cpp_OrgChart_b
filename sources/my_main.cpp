@@ -32,7 +32,7 @@ int main(){
 
     // string* level = organization.begin_level_order();
     // string* pre = organization.begin_preorder();
-    string* rev = organization.begin_reverse_order();
+    // string* rev = organization.begin_reverse_order();
 
     // for (int i = 0; i < organization.get_size(); i++)
     // {

@@ -41,44 +41,54 @@ namespace ariel
         }
     }worker , *p_worker;
 
-    class my_iterator{
+    template<typename T> class my_iterator{
 
         private:
         vector<worker*> root;
-        int pos;
 
         public:
-        my_iterator(vector<worker>& emps){
-            this->pos = 0;
-            for (int i = 0; i < emps.size(); i++)
+        my_iterator(){
+
+        }
+
+        my_iterator(const vector<worker>& chart){
+            for (worker& w : chart)
             {
-                this->root.emplace_back(&emps.at(i));
+                root.emplace_back(&w);
             }
         }
 
-        T& operator*() const{
-            return this->root.at(pos)->name;
+        T& operator*() const{     
+            return root.front()->name;
         }
 
         T* operator->() const{
-            return &(this->root.at(pos)->name);
+            return &(this->front()->name);
         }
 
         my_iterator& operator++(){
-            pos++;
+            root.erase(root.begin());
             return *this;
         }
+
         const my_iterator operator++(int){
             my_iterator ans = *this;
-            pos++;
+            root.erase(root.begin());
             return ans;
         }
+
         bool operator==(const my_iterator& element) const{
-            return this->root.at(pos)->name == element.root.at(element.pos)->name;
+            return root.size() > 0 && element.size() > 0 && root.front()->name == *element;
         }
+
         bool operator!=(const my_iterator& element) const{
             return !((*this) == element);
         }
+
+        int size(){
+            return root.size();
+        }
+
     };
 
 }

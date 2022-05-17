@@ -13,9 +13,11 @@ namespace ariel
         string* pre_order_it = NULL;
         string* reverse_order_it = NULL;
     }
+
     OrgChart::~OrgChart(){
         
     }
+
     // Funcs
     OrgChart& OrgChart::add_root(string supirior_name)
     {
@@ -48,20 +50,9 @@ namespace ariel
         return *this;
     }
 
-    // Iterators
-    string *OrgChart::begin()
-    {
-        return begin_level_order();
-    }
-
-    string *OrgChart::end()
-    {
-        return end_level_order();
-    }
-
-    string *OrgChart::begin_level_order()
-    {
+    void OrgChart::level_order_tree(){
         string ans[employees.size()];
+        vector<p_worker> new_order;
         int i = 0;
         if (!employees.empty())
         {
@@ -71,6 +62,7 @@ namespace ariel
             while (!Q.empty())
             {
                 p_worker supirior = Q.front();
+                new_order.emplace_back(supirior);
                 ans[i++] = supirior->name;
                 cout << "curr child = " << supirior->name << " and he has " << supirior->his_workers.size() << " childs\n"; 
                 for (int j = 0; j < supirior->his_workers.size(); j++)
@@ -84,19 +76,37 @@ namespace ariel
         {
             cout << s << "\n";
         }
-        
-        this->level_order_it = ans;
-        return this->level_order_it;
     }
 
-    string *OrgChart::end_level_order()
-    {
-        return &(begin_level_order()[employees.size() - 1]);
-    }
-
-    string *OrgChart::begin_reverse_order()
-    {
+    void OrgChart::pre_order_tree(){
         string ans[employees.size()];
+        vector<p_worker> new_order;
+
+        int i = 0;
+        stack<p_worker> S;
+        S.push(&this->employees.at(0));
+        while (!S.empty())
+        {
+            p_worker supirior = S.top();
+            new_order.emplace_back(supirior);
+            ans[i++] = supirior->name;
+            S.pop();
+            for (int j = supirior->his_workers.size() - 1; j >= 0; j--)
+            {
+                S.push(supirior->his_workers.at((unsigned int)j));
+            }
+        }
+
+        for (string& s : ans)
+        {
+            cout << s << "\n";
+        }
+    }
+
+    void OrgChart::reverse_order_tree(){
+        string ans[employees.size()];
+        vector<p_worker> new_order;
+
         int i = 0;
         p_worker supirior;
         stack<p_worker> S;
@@ -117,6 +127,7 @@ namespace ariel
         while (!S.empty())
         {
             supirior = S.top();
+            new_order.emplace_back(supirior);
             ans[i++] = supirior->name;
             S.pop();
         }
@@ -125,44 +136,50 @@ namespace ariel
         {
             cout << s << "\n";
         }
-        
-        this->reverse_order_it = ans;
-        return this->reverse_order_it;
     }
 
-    string *OrgChart::reverse_order()
+    // Iterators
+    my_iterator<string> OrgChart::begin()
     {
-        return &(begin_reverse_order()[employees.size() - 1]);
+        return begin_level_order();
     }
 
-    string *OrgChart::begin_preorder()
+    my_iterator<string> OrgChart::end()
     {
-        string ans[employees.size()];
-        int i = 0;
-        stack<p_worker> S;
-        S.push(&this->employees.at(0));
-        while (!S.empty())
-        {
-            p_worker supirior = S.top();
-            ans[i++] = supirior->name;
-            S.pop();
-            for (int j = supirior->his_workers.size() - 1; j >= 0; j--)
-            {
-                S.push(supirior->his_workers.at((unsigned int)j));
-            }
-        }
-
-        for (string& s : ans)
-        {
-            cout << s << "\n";
-        }
-        this->pre_order_it = ans;
-        return this->pre_order_it;
+        return end_level_order();
     }
 
-    string *OrgChart::end_preorder()
+    my_iterator<string> OrgChart::begin_level_order()
     {
-        return &(begin_preorder()[employees.size() - 1]);
+        this->level_order_tree();
+        return my_iterator<string>{this->employees};
+    }
+
+    my_iterator<string> OrgChart::end_level_order()
+    {
+        return my_iterator<string>{};
+    }
+
+    my_iterator<string> OrgChart::begin_reverse_order()
+    {
+        this->reverse_order_tree();
+        return my_iterator<string>{this->employees};
+    }
+
+    my_iterator<string> OrgChart::reverse_order()
+    {
+        return my_iterator<string>{};
+    }
+
+    my_iterator<string> OrgChart::begin_preorder()
+    {
+        this->pre_order_tree();
+        return my_iterator<string>{this->employees};
+    }
+
+    my_iterator<string> OrgChart::end_preorder()
+    {
+        return my_iterator<string>{};
     }
 
     // Operators
