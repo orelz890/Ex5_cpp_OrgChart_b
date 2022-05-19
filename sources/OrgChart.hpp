@@ -19,11 +19,8 @@ namespace ariel
         
         private:     
         vector<worker> employees;
-
+        p_worker root;
         int longest_str;
-        string* level_order_it;
-        string* pre_order_it;
-        string* reverse_order_it;
 
         public:
         
@@ -34,9 +31,7 @@ namespace ariel
         int get_size(){
             return employees.size();
         }
-        // vector<p_worker> get_print_prity(){
-        //     return this->print_prity;
-        // }
+
         vector<worker> get_employees(){
             return this->employees;
         }

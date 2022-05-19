@@ -1,6 +1,9 @@
 // In this part i was aided by this site:
 // https://www.geeksforgeeks.org/reverse-level-order-traversal
 
+// How to run:
+//g++ OrgChart.cpp my_iterator.cpp my_main.cpp my_iterator.hpp OrgChart.hpp
+
 #include "OrgChart.hpp"
 
 namespace ariel
@@ -9,36 +12,36 @@ namespace ariel
     {
         this->employees.clear();
         int longest_str = 0;
-        string* level_order_it = NULL;
-        string* pre_order_it = NULL;
-        string* reverse_order_it = NULL;
+        this->root = NULL;
     }
 
     // Funcs
     OrgChart& OrgChart::add_root(string supirior_name)
     {
-        string temp;
-        if (this->employees.empty())
+
+        if (this->root)
         {
-            this->employees.emplace_back(worker{supirior_name,temp});
+            this->root->name = supirior_name;
         }
         else
         {
-            this->employees.at(0).name = supirior_name;
+            this->employees.emplace_back(worker{supirior_name,NULL});
+            this->root = &this->employees.at(this->employees.size() - 1);
         }
         return *this;
     }
 
-    OrgChart& OrgChart::add_sub(string supirior, string new_emp)
+    OrgChart& OrgChart::add_sub(string supirior_name, string new_emp_name)
     {
         for (unsigned long i = 0; i < this->get_size(); i++)
         {
-            if (this->employees.at(i).name == supirior)
+            if (this->employees.at(i).name == supirior_name)
             {
-                int last_element = this->get_size();
-                this->employees.emplace_back(worker{new_emp, supirior});
-                this->employees.at(i).his_workers.emplace_back(&(this->employees.at((unsigned long)last_element)));
-                // cout << this->employees.at(i).name << " is " << this->employees.at(last_element).name
+                this->employees.emplace_back(worker(new_emp_name,&this->employees.at(i)));
+                this->employees.at(i).his_workers
+                    .push_back(&(this->employees.at((unsigned long)(this->get_size()-1))));
+                // cout << this->employees.at(i).name << " is " 
+                //      << this->employees.at(i).his_workers.at(this->employees.at(i).his_workers.size() - 1)->name
                 //      << "'s supirior and he has: " << this->employees.at(i).his_workers.size() << " subordinates:\n";
                 break;
             }
@@ -50,7 +53,7 @@ namespace ariel
         string ans[employees.size()];
         vector<p_worker> new_order;
         int i = 0;
-        if (!employees.empty())
+        if (!this->employees.empty())
         {
             queue<p_worker> Q;
             Q.push(&this->employees.at(0));
@@ -60,7 +63,9 @@ namespace ariel
                 p_worker supirior = Q.front();
                 new_order.emplace_back(supirior);
                 ans[i++] = supirior->name;
-                cout << "curr child = " << supirior->name << " and he has " << supirior->his_workers.size() << " childs\n"; 
+                cout << "curr child = " << supirior->name << " and he has " 
+                     << supirior->his_workers.size() << " kids\n"; 
+                     
                 for (unsigned long j = 0; j < supirior->his_workers.size(); j++)
                 {
                     Q.push(supirior->his_workers.at(j));
@@ -196,14 +201,14 @@ namespace ariel
         {
             for (worker& child : new_data.employees)
             {
-                if(child.supirior.size() > 0){
+                if(child.supirior_name.size() > 0){
                     pair<string, string> temp = {perent.name, child.name};
                     mat[temp] = 0;
                     if (perent.name.size() > longest_str || child.name.size() > longest_str)
                     {
                         longest_str = perent.name.size() > child.name.size() ? perent.name.size() : child.name.size();
                     }
-                    if (child.supirior == perent.name)
+                    if (child.supirior_name == perent.name)
                     {
                         // cout << "perent = " << perent.name << " child = " << child.name << " child parent = "<< child.supirior << "\n";
                         mat[temp] = 1;
@@ -213,13 +218,13 @@ namespace ariel
         }
 
         // Prity drawing
-        unsigned long len = (longest_str - 3)/2;
+        // unsigned long len = (longest_str - 3)/2;
         output << '\n'
-               << string(len, ' ') << "p\\c" << string(longest_str- len, ' ')<< '|';
+               << string((longest_str - 3)/2, ' ') << "p\\c" << string(longest_str - (longest_str - 3)/2 -2, ' ')<< '|';
         for (worker& emp : new_data.employees)
         {
             // varifiying that child is not root
-            if(emp.supirior.size() > 0){
+            if(emp.supirior_name.size() > 0){
                 output <<string((longest_str - emp.name.size())/2, ' ') << emp.name << string((longest_str - emp.name.size())/2 + 1, ' ') << '|';
             }
         }
@@ -231,7 +236,7 @@ namespace ariel
             for (worker& child : new_data.employees)
             {
                 // varifiying that child is not root
-                if(child.supirior.size() > 0){
+                if(child.supirior_name.size() > 0){
                     pair<string, string> pos = {perent.name, child.name};
                     output << string(longest_str / 2, ' ') << mat.at(pos) << string(longest_str - (longest_str / 2), ' ') << '|';
                 }
