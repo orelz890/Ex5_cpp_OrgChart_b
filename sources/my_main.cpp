@@ -14,51 +14,24 @@ int main(){
       .add_sub("CEO", "CTO")         // Now the CTO is subordinate to the CEO
       .add_sub("CEO", "CFO")         // Now the CFO is subordinate to the CEO
       .add_sub("CEO", "COO")         // Now the COO is subordinate to the CEO
-      .add_sub("CTO", "VP_SW") // Now the VP Software is subordinate to the CTO
+      .add_sub("CTO", "VP_SW")  // Now the VP Software is subordinate to the CTO
       .add_sub("COO", "VP_BI")      // Now the VP_BI is subordinate to the COO
       .add_sub("CTO", "AAA")
       .add_sub("AAA","BBB");
 
-    // organization.add_root("CEO")
-    // .add_sub("CEO", "CTO")
-    // .add_sub("CEO", "CFO")
-    // .add_sub("CEO", "COO")
-    // .add_sub("CEO", "AAA")
-    // .add_sub("CEO", "BBB");
-    
     cout << "im in main\n";
     fflush(stdout);
 
-    cout << organization;
+    // // prints tree representation (matrix)
+    // cout << organization;
 
-    // string* level = organization.begin_level_order();
-    // string* pre = organization.begin_preorder();
-    // string* rev = organization.begin_reverse_order();
-
-    // for (int i = 0; i < organization.get_size(); i++)
-    // {
-    //     cout << level[i] << " ";
-    // }
-    
-    // cout << organization.end()[0]<< '\n' << " im here 2\n";
-    // fflush(stdout);
-
-    int g;
-
-    // for (worker& emp : organization.get_employees())
-    // {
-    //     cout << emp.his_workers.size() << " ";
-    // }
-
-    for (worker& emp : organization.get_employees())
+    int g = 0;
+    cout << "\n\nroot nane == "<< organization.get_root()->name << " and his emps are:\n";
+    for (worker* e : organization.get_root()->his_workers)
     {
-        cout<< "emp.name = " <<  emp.name << " childrens:\n";
-        g = 0;
-        for (unsigned long j = 0; j < emp.his_workers.size(); j++)
-        {
-            cout << g++ << ") " << emp.his_workers.at(j)->name << "\n";
-        }
+        cout << g++ << ") " << e->name << "\n";
     }
+    
 
     my_iterator<string> it= organization.begin();
     cout << *it << " ";

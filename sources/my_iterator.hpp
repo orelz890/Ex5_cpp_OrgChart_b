@@ -14,29 +14,49 @@ namespace ariel
     typedef struct worker
     {
         string name;
-        string supirior;
+        string supirior_name;
+        worker* supirior;
         vector<worker*> his_workers;
-        worker(){}
-        worker(worker* w){
-            this->name = w->name;
-            this->supirior = w->supirior;
-            this->his_workers = w->his_workers;
-        }
+
+        // worker(){}
+
         worker(string name, string supirior){
             this->name = name;
-            this->supirior = supirior;
-            // this->his_workers.clear();
+            this->supirior_name = supirior;
         }
 
-        worker& operator=(worker& w){
-            *this = w;
-            // this->name = w.name;
-            // this->supirior = w.supirior;
-            // this->his_workers = w.his_workers;
-            // // for (int i = 0; i < w.his_workers.size(); i++)
-            // // {
-            // //     this->his_workers.emplace_back(w.his_workers.at(i));
-            // // }
+        worker(string name, worker* sup)
+        {
+            this->name = name;
+            this->supirior = sup;
+            if (sup != NULL)
+            {
+                this->supirior_name = sup->name;
+            }
+            
+        }
+
+        // worker& operator=(worker& w){
+        //     this->name = w.name;
+        //     this->supirior = w.supirior;
+        //     for (int i = 0; i < w.his_workers.size(); i++)
+        //     {
+        //         this->his_workers
+        //         .emplace_back(w.his_workers.at((unsigned long)i));
+        //     }
+        //     return *this;
+        // }
+        worker& operator=(worker* w){
+            this->name = w->name;
+            this->supirior = w->supirior;
+            this->supirior_name = w->supirior_name;
+            // this->his_workers = w->his_workers;
+            for (worker* emp : w->his_workers)
+            {
+                // this->his_workers.push_back(emp);
+                this->his_workers.insert(this->his_workers.end(),emp);
+            }
+            
             return *this;
         }
     }worker , *p_worker;

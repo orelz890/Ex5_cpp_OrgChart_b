@@ -18,8 +18,8 @@ namespace ariel
     {
         
         private:     
-        vector<worker> employees;
         p_worker root;
+        int size;
         int longest_str;
 
         public:
@@ -29,15 +29,10 @@ namespace ariel
 
         // Getter & setters
         int get_size(){
-            return employees.size();
+            return size;
         }
-
-        vector<worker> get_employees(){
-            return this->employees;
-        }
-
-        p_worker get_emp_at(int pos){
-            return &employees.at((unsigned long)pos);
+        p_worker get_root(){
+            return this->root;
         }
 
         // Helpers:
