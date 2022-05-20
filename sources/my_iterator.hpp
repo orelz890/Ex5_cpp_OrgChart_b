@@ -11,21 +11,19 @@ using namespace std;
 
 namespace ariel
 {
-    typedef struct worker
+    typedef struct employee
     {
         string name;
         string supirior_name;
-        worker* supirior;
-        vector<worker*> his_workers;
+        employee* supirior;
+        vector<employee*> his_emps;
 
-        // worker(){}
-
-        worker(string name, string supirior){
+        employee(string name, string supirior){
             this->name = name;
             this->supirior_name = supirior;
         }
 
-        worker(string name, worker* sup)
+        employee(string name, employee* sup)
         {
             this->name = name;
             this->supirior = sup;
@@ -35,53 +33,42 @@ namespace ariel
             }
             
         }
-
-        // worker& operator=(worker& w){
-        //     this->name = w.name;
-        //     this->supirior = w.supirior;
-        //     for (int i = 0; i < w.his_workers.size(); i++)
-        //     {
-        //         this->his_workers
-        //         .emplace_back(w.his_workers.at((unsigned long)i));
-        //     }
-        //     return *this;
-        // }
-        worker& operator=(worker* w){
+        employee& operator=(employee* w){
             this->name = w->name;
             this->supirior = w->supirior;
             this->supirior_name = w->supirior_name;
             // this->his_workers = w->his_workers;
-            for (worker* emp : w->his_workers)
+            for (employee* emp : w->his_emps)
             {
                 // this->his_workers.push_back(emp);
-                this->his_workers.insert(this->his_workers.end(),emp);
+                this->his_emps.insert(this->his_emps.end(),emp);
             }
             
             return *this;
         }
-    }worker , *p_worker;
+    }employee;
 
     template<typename T> class my_iterator{
 
         private:
-        vector<worker*> root;
+        vector<employee*> root;
 
         public:
         my_iterator(){
             // root.clear();
         }
 
-        my_iterator(p_worker node){
-            queue<p_worker> Q;
+        my_iterator(employee* node){
+            queue<employee*> Q;
             Q.push(node);
 
             while (!Q.empty())
             {
-                p_worker w = Q.front();
+                employee* w = Q.front();
                 this->root.push_back(w);
-                for (int i = 0; i < w->his_workers.size(); i++)
+                for (int i = 0; i < w->his_emps.size(); i++)
                 {
-                    Q.push(w->his_workers.at((unsigned long)i));
+                    Q.push(w->his_emps.at((unsigned long)i));
                 }
                 Q.pop();
             }

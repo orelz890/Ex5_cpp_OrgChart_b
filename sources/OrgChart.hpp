@@ -18,7 +18,7 @@ namespace ariel
     {
         
         private:     
-        p_worker root;
+        employee* root;
         int size;
         int longest_str;
 
@@ -31,7 +31,7 @@ namespace ariel
         int get_size(){
             return size;
         }
-        p_worker get_root(){
+        employee* get_root(){
             return this->root;
         }
 

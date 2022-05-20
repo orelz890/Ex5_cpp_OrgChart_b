@@ -27,7 +27,7 @@ int main(){
 
     int g = 0;
     cout << "\n\nroot nane == "<< organization.get_root()->name << " and his emps are:\n";
-    for (worker* e : organization.get_root()->his_workers)
+    for (employee* e : organization.get_root()->his_emps)
     {
         cout << g++ << ") " << e->name << "\n";
     }

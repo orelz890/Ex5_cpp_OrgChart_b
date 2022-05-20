@@ -25,7 +25,7 @@ namespace ariel
         }
         else
         {
-            worker* a = new worker{supirior_name,NULL};
+            employee* a = new employee{supirior_name,NULL};
             this->root = a;
             this->size++;
         }
@@ -37,24 +37,24 @@ namespace ariel
         if (this->root->name != supirior_name)
         {
             bool flag = true;
-            queue<worker*> Q;
+            queue<employee*> Q;
             Q.push(this->root);
-            worker* sup;
-            worker* sub;
+            employee* sup;
+            employee* sub;
             while (!Q.empty() && flag)
             {
                 sup = Q.front();
-                if (!sup->his_workers.empty())
+                if (!sup->his_emps.empty())
                 {
-                    for (unsigned long i = 0; i < sup->his_workers.size(); i++){
-                        sub = sup->his_workers.at(i);
+                    for (unsigned long i = 0; i < sup->his_emps.size(); i++){
+                        sub = sup->his_emps.at(i);
                         cout << sup->name << " is " << sub->name << "'s supirior\n";
                         // sleep(1);
                         Q.push(sub);
                         if (sub->name == supirior_name)
                         {
-                            worker* new_emp = new worker(new_emp_name,sub);
-                            sub->his_workers.push_back(new_emp);
+                            employee* new_emp = new employee(new_emp_name,sub);
+                            sub->his_emps.push_back(new_emp);
                             this->size++;
                             flag = false;
                             break;
@@ -66,8 +66,8 @@ namespace ariel
         }
         else
         {
-            worker* new_emp = new worker(new_emp_name,this->root);
-            this->root->his_workers.push_back(new_emp);
+            employee* new_emp = new employee(new_emp_name,this->root);
+            this->root->his_emps.push_back(new_emp);
             this->size++;
         }
         return *this;
@@ -75,24 +75,24 @@ namespace ariel
 
     void OrgChart::level_order_tree(){
         string ans[this->size];
-        vector<p_worker> new_order;
+        vector<employee*> new_order;
         int i = 0;
         if (this->size > 0)
         {
-            queue<p_worker> Q;
+            queue<employee*> Q;
             Q.push(this->root);
-
+            employee* supirior;
             while (!Q.empty())
             {
-                p_worker supirior = Q.front();
+                supirior = Q.front();
                 new_order.emplace_back(supirior);
                 ans[i++] = supirior->name;
                 cout << "curr child = " << supirior->name << " and he has " 
-                     << supirior->his_workers.size() << " kids\n"; 
+                     << supirior->his_emps.size() << " kids\n"; 
                      
-                for (unsigned long j = 0; j < supirior->his_workers.size(); j++)
+                for (unsigned long j = 0; j < supirior->his_emps.size(); j++)
                 {
-                    Q.push(supirior->his_workers.at(j));
+                    Q.push(supirior->his_emps.at(j));
                 }
                 Q.pop();
             }
@@ -105,23 +105,24 @@ namespace ariel
 
     void OrgChart::pre_order_tree(){
         string ans[this->size];
-        vector<worker*> new_order;
+        vector<employee*> new_order;
 
         int i = 0;
-        stack<worker*> S;
+        stack<employee*> S;
         if (this->size > 0)
         {
             
             S.push(this->root);
+            employee* supirior;
             while (!S.empty())
             {
-                p_worker supirior = S.top();
+                supirior = S.top();
                 new_order.emplace_back(supirior);
                 ans[i++] = supirior->name;
                 S.pop();
-                for (int j = supirior->his_workers.size() - 1; j >= 0; j--)
+                for (int j = supirior->his_emps.size() - 1; j >= 0; j--)
                 {
-                    S.push(supirior->his_workers.at((unsigned int)j));
+                    S.push(supirior->his_emps.at((unsigned int)j));
                 }
             }
 
@@ -134,15 +135,15 @@ namespace ariel
 
     void OrgChart::reverse_order_tree(){
         string ans[this->size];
-        vector<worker*> new_order;
+        vector<employee*> new_order;
 
         if (this->size > 0)
         {
         
             int i = 0;
-            p_worker supirior;
-            stack<p_worker> S;
-            queue<p_worker> Q;
+            employee* supirior;
+            stack<employee*> S;
+            queue<employee*> Q;
             Q.push(this->root);
 
             while (!Q.empty())
@@ -151,9 +152,9 @@ namespace ariel
                 Q.pop();
                 S.push(supirior);
                 // Push his subordinates from right to left to our queue
-                for (int j = supirior->his_workers.size() - 1; j >= 0; j--)
+                for (int j = supirior->his_emps.size() - 1; j >= 0; j--)
                 {
-                    Q.push(supirior->his_workers.at((unsigned int)j));
+                    Q.push(supirior->his_emps.at((unsigned int)j));
                 }
             }
             while (!S.empty())
@@ -224,13 +225,13 @@ namespace ariel
         unsigned long longest_str = 0;
 
         // Find the longest name & fill the mat --> if a is b's subordinate than mat(a,b) = 1 else mat(a,b) = 0.
-        queue<worker*> Q;
+        queue<employee*> Q;
         Q.push(new_data.root);
-        worker* emp;
+        employee* emp;
         while (!Q.empty())
         {
             emp = Q.front();
-            for(worker* sub : emp->his_workers){
+            for(employee* sub : emp->his_emps){
                 Q.push(sub);
                 if (!sub->supirior_name.empty())
                 {
@@ -259,7 +260,7 @@ namespace ariel
         while (!Q.empty())
         {
             emp = Q.front();
-            for(worker* sub : emp->his_workers){
+            for(employee* sub : emp->his_emps){
                 Q.push(sub);
 
             }
@@ -279,7 +280,7 @@ namespace ariel
             output << string((longest_str - emp->name.size())/2, ' ') << emp->name 
                 << string((longest_str - emp->name.size())/2 + 1, ' ') << '|';
             
-            for(worker* sub : emp->his_workers){
+            for(employee* sub : emp->his_emps){
                 Q.push(sub);
                 // varifiying that child is not root
                 if(!sub->supirior_name.empty()){
