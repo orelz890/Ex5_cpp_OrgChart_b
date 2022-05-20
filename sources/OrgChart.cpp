@@ -73,7 +73,7 @@ namespace ariel
         return *this;
     }
 
-    void OrgChart::level_order_tree(){
+    vector<employee*> OrgChart::level_order_tree(){
         string ans[this->size];
         vector<employee*> new_order;
         int i = 0;
@@ -101,9 +101,10 @@ namespace ariel
         {
             cout << s << "\n";
         }
+        return new_order;
     }
 
-    void OrgChart::pre_order_tree(){
+    vector<employee*> OrgChart::pre_order_tree(){
         string ans[this->size];
         vector<employee*> new_order;
 
@@ -131,9 +132,10 @@ namespace ariel
                 cout << s << "\n";
             }
         }
+        return new_order;
     }
 
-    void OrgChart::reverse_order_tree(){
+    vector<employee*> OrgChart::reverse_order_tree(){
         string ans[this->size];
         vector<employee*> new_order;
 
@@ -170,6 +172,7 @@ namespace ariel
                 cout << s << "\n";
             }
         }
+        return new_order;
     }
 
     // Iterators
@@ -185,8 +188,7 @@ namespace ariel
 
     my_iterator<string> OrgChart::begin_level_order()
     {
-        this->level_order_tree();
-        return my_iterator<string>{this->root};
+        return my_iterator<string>{this->level_order_tree()};
     }
 
     my_iterator<string> OrgChart::end_level_order()
@@ -196,8 +198,7 @@ namespace ariel
 
     my_iterator<string> OrgChart::begin_reverse_order()
     {
-        this->reverse_order_tree();
-        return my_iterator<string>{this->root};
+        return my_iterator<string>{this->reverse_order_tree()};
     }
 
     my_iterator<string> OrgChart::reverse_order()
@@ -207,8 +208,7 @@ namespace ariel
 
     my_iterator<string> OrgChart::begin_preorder()
     {
-        this->pre_order_tree();
-        return my_iterator<string>{this->root};
+        return my_iterator<string>{this->pre_order_tree()};
     }
 
     my_iterator<string> OrgChart::end_preorder()
@@ -239,7 +239,8 @@ namespace ariel
                     mat[key] = 0;
                     if (sub->supirior_name == emp->name)
                     {
-                        // cout << "perent = " << perent.name << " child = " << child.name << " child parent = "<< child.supirior << "\n";
+                        cout << emp->name << " is " << sub->name << "'s sup\n";
+                        fflush(stdout);                         
                         mat[key] = 1;
                     }
                 }
@@ -271,7 +272,7 @@ namespace ariel
             }
             Q.pop();
         }
-        output << '\n' << string((longest_str + 2) * (new_data.size), '-') << '\n';
+        output << '\n' << string((longest_str + 2) * (unsigned long)(new_data.size), '-') << '\n';
         
         Q.push(new_data.root);
         while (!Q.empty())

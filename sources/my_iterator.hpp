@@ -58,21 +58,25 @@ namespace ariel
             // root.clear();
         }
 
-        my_iterator(employee* node){
-            queue<employee*> Q;
-            Q.push(node);
+        // my_iterator(employee* node){
+        //     queue<employee*> Q;
+        //     Q.push(node);
 
-            while (!Q.empty())
-            {
-                employee* w = Q.front();
-                this->root.push_back(w);
-                for (int i = 0; i < w->his_emps.size(); i++)
-                {
-                    Q.push(w->his_emps.at((unsigned long)i));
-                }
-                Q.pop();
-            }
-            std::cout << root.size() << " nodes added to the iterator\n";
+        //     while (!Q.empty())
+        //     {
+        //         employee* w = Q.front();
+        //         this->root.push_back(w);
+        //         for (int i = 0; i < w->his_emps.size(); i++)
+        //         {
+        //             Q.push(w->his_emps.at((unsigned long)i));
+        //         }
+        //         Q.pop();
+        //     }
+        //     std::cout << root.size() << " nodes added to the iterator\n";
+        // }
+
+        my_iterator(vector<employee*> emps){
+            this->root = emps;
         }
 
         T& operator*() const{

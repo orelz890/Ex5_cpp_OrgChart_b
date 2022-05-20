@@ -36,9 +36,9 @@ namespace ariel
         }
 
         // Helpers:
-        void level_order_tree();
-        void pre_order_tree();
-        void reverse_order_tree();
+        vector<employee*> level_order_tree();
+        vector<employee*> pre_order_tree();
+        vector<employee*> reverse_order_tree();
 
         // Funcs
         OrgChart& add_root(string supirior_name);

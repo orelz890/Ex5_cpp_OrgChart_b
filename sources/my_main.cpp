@@ -23,7 +23,7 @@ int main(){
     fflush(stdout);
 
     // // prints tree representation (matrix)
-    // cout << organization;
+    cout << organization;
 
     int g = 0;
     cout << "\n\nroot nane == "<< organization.get_root()->name << " and his emps are:\n";
@@ -33,9 +33,10 @@ int main(){
     }
     
 
-    my_iterator<string> it= organization.begin();
-    cout << *it << " ";
-    cout << *it++ << " " << *it << " ";
+    // my_iterator<string> it= organization.begin();
+
+    // cout << *it << " ";
+    // cout << *it++ << " " << *it << " ";
 
     // vector<worker> employees;
     // worker a;
