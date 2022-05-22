@@ -16,17 +16,22 @@ namespace ariel
         string name;
         string supirior_name;
         employee* supirior;
+        employee* next_in_line;
         vector<employee*> his_emps;
+
 
         employee(string name, string supirior){
             this->name = name;
             this->supirior_name = supirior;
+            this->supirior = NULL;
+            this->next_in_line = NULL;
         }
 
         employee(string name, employee* sup)
         {
             this->name = name;
             this->supirior = sup;
+            this->next_in_line = NULL;
             if (sup != NULL)
             {
                 this->supirior_name = sup->name;
@@ -51,63 +56,42 @@ namespace ariel
     template<typename T> class my_iterator{
 
         private:
-        vector<employee*> root;
+        employee* root;
 
         public:
         my_iterator(){
             // root.clear();
         }
 
-        // my_iterator(employee* node){
-        //     queue<employee*> Q;
-        //     Q.push(node);
-
-        //     while (!Q.empty())
-        //     {
-        //         employee* w = Q.front();
-        //         this->root.push_back(w);
-        //         for (int i = 0; i < w->his_emps.size(); i++)
-        //         {
-        //             Q.push(w->his_emps.at((unsigned long)i));
-        //         }
-        //         Q.pop();
-        //     }
-        //     std::cout << root.size() << " nodes added to the iterator\n";
-        // }
-
-        my_iterator(vector<employee*> emps){
+        my_iterator(employee* emps){
             this->root = emps;
         }
 
         T& operator*() const{
-            return root.front()->name;
+            return root->name;
         }
 
         T* operator->() const{
-            return &(this->root.front()->name);
+            return &(this->root->name);
         }
 
         my_iterator& operator++(){
-            root.erase(root.begin());
+            this->root = this->root->next_in_line;
             return *this;
         }
 
         const my_iterator operator++(int){
             my_iterator ans = *this;
-            root.erase(root.begin());
+            this->root = this->root->next_in_line;
             return ans;
         }
 
         bool operator==(const my_iterator& element) const{
-            return root.size() > 0 && element.it_size() > 0 && root.front()->name == *element;
+            return this->root->name == *element;
         }
 
         bool operator!=(const my_iterator& element) const{
-            return !(root.size() > 0 && element.it_size() > 0 && root.front()->name == *element);
-        }
-
-        int it_size() const{
-            return root.size();
+            return !(this->root->name == *element);
         }
 
     };

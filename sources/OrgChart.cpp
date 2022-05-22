@@ -73,9 +73,9 @@ namespace ariel
         return *this;
     }
 
-    vector<employee*> OrgChart::level_order_tree(){
+    void OrgChart::level_order_tree(){
         string ans[this->size];
-        vector<employee*> new_order;
+        employee* last_emp = NULL;
         int i = 0;
         if (this->size > 0)
         {
@@ -85,10 +85,15 @@ namespace ariel
             while (!Q.empty())
             {
                 supirior = Q.front();
-                new_order.emplace_back(supirior);
+                if (last_emp != NULL)
+                {
+                    last_emp->next_in_line = supirior;
+                }
+                last_emp = supirior;
+                last_emp->next_in_line = NULL;
                 ans[i++] = supirior->name;
-                cout << "curr child = " << supirior->name << " and he has " 
-                     << supirior->his_emps.size() << " kids\n"; 
+                // cout << "curr child = " << supirior->name << " and he has " 
+                //      << supirior->his_emps.size() << " kids\n"; 
                      
                 for (unsigned long j = 0; j < supirior->his_emps.size(); j++)
                 {
@@ -101,13 +106,11 @@ namespace ariel
         {
             cout << s << "\n";
         }
-        return new_order;
     }
 
-    vector<employee*> OrgChart::pre_order_tree(){
+    void OrgChart::pre_order_tree(){
         string ans[this->size];
-        vector<employee*> new_order;
-
+        employee* last_emp = NULL;
         int i = 0;
         stack<employee*> S;
         if (this->size > 0)
@@ -118,7 +121,12 @@ namespace ariel
             while (!S.empty())
             {
                 supirior = S.top();
-                new_order.emplace_back(supirior);
+                if (last_emp != NULL)
+                {
+                    last_emp->next_in_line = supirior;
+                }
+                last_emp = supirior;
+                last_emp->next_in_line = NULL;
                 ans[i++] = supirior->name;
                 S.pop();
                 for (int j = supirior->his_emps.size() - 1; j >= 0; j--)
@@ -132,13 +140,11 @@ namespace ariel
                 cout << s << "\n";
             }
         }
-        return new_order;
     }
 
-    vector<employee*> OrgChart::reverse_order_tree(){
+    void OrgChart::reverse_order_tree(){
         string ans[this->size];
-        vector<employee*> new_order;
-
+        employee* last_emp = NULL;
         if (this->size > 0)
         {
         
@@ -162,7 +168,12 @@ namespace ariel
             while (!S.empty())
             {
                 supirior = S.top();
-                new_order.emplace_back(supirior);
+                if (last_emp != NULL)
+                {
+                    last_emp->next_in_line = supirior;
+                }
+                last_emp = supirior;
+                last_emp->next_in_line = NULL;
                 ans[i++] = supirior->name;
                 S.pop();
             }
@@ -172,7 +183,6 @@ namespace ariel
                 cout << s << "\n";
             }
         }
-        return new_order;
     }
 
     // Iterators
@@ -188,7 +198,8 @@ namespace ariel
 
     my_iterator<string> OrgChart::begin_level_order()
     {
-        return my_iterator<string>{this->level_order_tree()};
+        this->level_order_tree();
+        return my_iterator<string>{this->root};
     }
 
     my_iterator<string> OrgChart::end_level_order()
@@ -198,7 +209,8 @@ namespace ariel
 
     my_iterator<string> OrgChart::begin_reverse_order()
     {
-        return my_iterator<string>{this->reverse_order_tree()};
+        this->reverse_order_tree();
+        return my_iterator<string>{this->root};
     }
 
     my_iterator<string> OrgChart::reverse_order()
@@ -208,7 +220,8 @@ namespace ariel
 
     my_iterator<string> OrgChart::begin_preorder()
     {
-        return my_iterator<string>{this->pre_order_tree()};
+        this->pre_order_tree();
+        return my_iterator<string>{this->root};
     }
 
     my_iterator<string> OrgChart::end_preorder()
@@ -223,6 +236,7 @@ namespace ariel
         int size = new_data.size;
         map<pair<string, string>, int> mat;
         unsigned long longest_str = 0;
+        vector<string> all_emps;
 
         // Find the longest name & fill the mat --> if a is b's subordinate than mat(a,b) = 1 else mat(a,b) = 0.
         queue<employee*> Q;
@@ -231,31 +245,30 @@ namespace ariel
         while (!Q.empty())
         {
             emp = Q.front();
+            all_emps.push_back(emp->name);
             for(employee* sub : emp->his_emps){
                 Q.push(sub);
-                if (!sub->supirior_name.empty())
-                {
-                    pair<string, string> key = {emp->name, sub->name};
-                    mat[key] = 0;
-                    if (sub->supirior_name == emp->name)
-                    {
-                        cout << emp->name << " is " << sub->name << "'s sup\n";
-                        fflush(stdout);                         
-                        mat[key] = 1;
-                    }
-                }
-                if (emp->name.size() > longest_str)
-                {
-                    longest_str = emp->name.size();
-                } 
+            }
+            if (emp->name.size() > longest_str)
+            {
+                longest_str = emp->name.size();
             }
             Q.pop();
         }
 
-        // Prity drawing
-        // unsigned long len = (longest_str - 3)/2;
+        for (string sup : all_emps)
+        {
+            for (string sub : all_emps)
+            {
+                pair<string,string> key = {sup,sub};
+                mat[key] = 0;
+            }
+        }
+        
+        // Pritty drawing
         output << '\n'
-               << string((longest_str - 3)/2, ' ') << "p\\c" << string(longest_str - (longest_str - 3)/2 -2, ' ')<< '|';
+               << string((longest_str - new_data.root->name.size())/2, ' ') << "p\\c" 
+               << string(longest_str - (longest_str - new_data.root->name.size())/2 -2, ' ') << '|';
         
         Q.push(new_data.root);
         while (!Q.empty())
@@ -263,10 +276,11 @@ namespace ariel
             emp = Q.front();
             for(employee* sub : emp->his_emps){
                 Q.push(sub);
-
+                pair<string, string> key = {emp->name, sub->name};
+                mat[key] = 1;
             }
             // varifiying that child is not root
-            if(!emp->supirior_name.empty()){
+            if(emp->supirior != NULL){
                 output <<string((longest_str - emp->name.size())/2, ' ') << emp->name 
                     << string((longest_str - emp->name.size())/2 + 1, ' ') << '|';
             }
@@ -274,88 +288,26 @@ namespace ariel
         }
         output << '\n' << string((longest_str + 2) * (unsigned long)(new_data.size), '-') << '\n';
         
-        Q.push(new_data.root);
-        while (!Q.empty())
+        for (string& sup : all_emps)
         {
-            emp = Q.front();
-            output << string((longest_str - emp->name.size())/2, ' ') << emp->name 
-                << string((longest_str - emp->name.size())/2 + 1, ' ') << '|';
+            output << string((longest_str - sup.size())/2, ' ') << sup 
+                << string((longest_str - sup.size())/2 , ' ') << '|';
             
-            for(employee* sub : emp->his_emps){
-                Q.push(sub);
-                // varifiying that child is not root
-                if(!sub->supirior_name.empty()){
-                    pair<string, string> pos = {emp->name, sub->name};
-                    output << string(longest_str / 2, ' ') << mat.at(pos) 
+            for (string& sub : all_emps)
+            {
+                if (sub != new_data.root->name)
+                {
+                    pair<string, string> pos = {sup,sub};
+                    output << string(longest_str / 2, ' ') << mat.at(pos)
                         << string(longest_str - (longest_str / 2), ' ') << '|';
                 }
+                
             }
-            output << "\n";
-            // output << "\n" << string((longest_str + 2) * (new_data.employees.size()), '-') << '\n';
-
-            Q.pop();
+            // output << "\n";
+            output << "\n" << string((longest_str + 2) * (unsigned long)(new_data.size), '-') << '\n';            
         }
         
         return output << '\n';
     }
-
-    // // Operators
-    // ostream &operator<<(ostream &output, OrgChart &new_data)
-    // {
-    //     // string *level_order_it = new_data.begin_level_order();
-    //     int size = new_data.size;
-    //     map<pair<string, string>, int> mat;
-    //     unsigned long longest_str = 0;
-
-    //     // Find the longest name & fill the mat --> if a is b's subordinate than mat(a,b) = 1 else mat(a,b) = 0.
-    //     for (worker& perent : new_data.employees)
-    //     {
-    //         for (worker& child : new_data.employees)
-    //         {
-    //             if(child.supirior_name.size() > 0){
-    //                 pair<string, string> temp = {perent.name, child.name};
-    //                 mat[temp] = 0;
-    //                 if (perent.name.size() > longest_str || child.name.size() > longest_str)
-    //                 {
-    //                     longest_str = perent.name.size() > child.name.size() ? perent.name.size() : child.name.size();
-    //                 }
-    //                 if (child.supirior_name == perent.name)
-    //                 {
-    //                     // cout << "perent = " << perent.name << " child = " << child.name << " child parent = "<< child.supirior << "\n";
-    //                     mat[temp] = 1;
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     // Prity drawing
-    //     // unsigned long len = (longest_str - 3)/2;
-    //     output << '\n'
-    //            << string((longest_str - 3)/2, ' ') << "p\\c" << string(longest_str - (longest_str - 3)/2 -2, ' ')<< '|';
-    //     for (worker& emp : new_data.employees)
-    //     {
-    //         // varifiying that child is not root
-    //         if(emp.supirior_name.size() > 0){
-    //             output <<string((longest_str - emp.name.size())/2, ' ') << emp.name << string((longest_str - emp.name.size())/2 + 1, ' ') << '|';
-    //         }
-    //     }
-    //     output << '\n'
-    //            << string((longest_str + 2) * (new_data.employees.size()), '-') << '\n';
-    //     for (worker& perent : new_data.employees)
-    //     {
-    //         output << string((longest_str - perent.name.size())/2, ' ') << perent.name << string((longest_str - perent.name.size())/2 + 1, ' ') << '|';
-    //         for (worker& child : new_data.employees)
-    //         {
-    //             // varifiying that child is not root
-    //             if(child.supirior_name.size() > 0){
-    //                 pair<string, string> pos = {perent.name, child.name};
-    //                 output << string(longest_str / 2, ' ') << mat.at(pos) << string(longest_str - (longest_str / 2), ' ') << '|';
-    //             }
-    //         }
-    //         output << "\n";
-    //         // output << "\n" << string((longest_str + 2) * (new_data.employees.size()), '-') << '\n';
-    //     }
-    //     return output << '\n';
-    // }
 
 }
