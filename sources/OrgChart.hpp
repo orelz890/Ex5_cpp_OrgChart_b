@@ -19,15 +19,15 @@ namespace ariel
         
         private:     
         employee* root;
+        employee* reverse_root;
         int size;
         int longest_str;
-        employee* end_of_order;
 
         public:
         
         // Constructors
         OrgChart();
-
+        ~OrgChart();
         // Getter & setters
         int get_size(){
             return size;
@@ -43,7 +43,7 @@ namespace ariel
 
         // Funcs
         OrgChart& add_root(string supirior_name);
-        OrgChart& add_sub(string a, string b);
+        OrgChart& add_sub(string supirior_name, string new_emp_name);
 
         // Iterators
         my_iterator<string> begin();

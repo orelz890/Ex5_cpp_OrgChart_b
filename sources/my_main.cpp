@@ -11,57 +11,58 @@
 // using namespace std;
 // using namespace ariel;
 // int main(){
+//     //create object person for this test
+//     class Person {
+//     public:
+//         string name;
+//         int age;
 
-//     OrgChart organization;
-//     organization.add_root("CEO")
-//       .add_sub("CEO", "CTO")         // Now the CTO is subordinate to the CEO
-//       .add_sub("CEO", "CFO")         // Now the CFO is subordinate to the CEO
-//       .add_sub("CEO", "COO")         // Now the COO is subordinate to the CEO
-//       .add_sub("CTO", "VP_SW")  // Now the VP Software is subordinate to the CTO
-//       .add_sub("COO", "VP_BI")      // Now the VP_BI is subordinate to the COO
-//       .add_sub("CTO", "AAA")
-//       .add_sub("AAA","BBB");
+//         Person(string Name, int Age) : name(Name), age(Age) {}
 
-//     cout << "im in main\n";
-//     fflush(stdout);
+//         bool operator==(Person &p1) {
+//             return this->name == p1.name;
+//         }
+//     };
+//     //instantiate People
+//     Person Great_GrandFather("Great_GrandFather", 85);
+//     Person Grandfather("GrandFather", 65);
+//     Person Father("Father", 45);
+//     Person Uncle("Uncle", 43);
+//     Person Aunt("Aunt", 43);
+//     Person Son("Son", 20);
+//     Person Daughter("Daughter", 18);
+//     Person Cousin("Cousin", 15);
 
-//     // // prints tree representation (matrix)
-//     cout << organization;
+//     OrgChart chart1;
+//     chart1.add_root(Aunt.name);
+//     chart1.add_root(Great_GrandFather.name);
+//     chart1.add_sub(Great_GrandFather.name, Grandfather.name);
+//     chart1.add_sub(Grandfather.name, Father.name);
+//     chart1.add_sub(Grandfather.name, Uncle.name);
+//     chart1.add_sub(Grandfather.name, Aunt.name);
+//     chart1.add_sub(Father.name, Son.name);
+//     chart1.add_sub(Father.name, Daughter.name);
+//     chart1.add_sub(Uncle.name, Cousin.name);
 
-//     // int g = 0;
-//     // cout << "\n\nroot nane == "<< organization.get_root()->name << " and his emps are:\n";
-//     // for (employee* e : organization.get_root()->his_emps)
-//     // {
-//     //     cout << g++ << ") " << e->name << "\n";
-//     // }
-    
+//     cout << chart1;
+//     // test level order
+//     for (auto it = chart1.begin_level_order(); it != chart1.end_level_order(); ++it) {
+//         cout << *it << " ";
+//     }
+//     cout << '\n';
 
-//     my_iterator<string> it= organization.begin();
-//     for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it)
-//     {
-//         cout << (*it) << " " ;
-//     } // prints: CEO CTO CFO COO VP_SW VP_BI
+//     //add another field and check that it works
+//     Person Cousin2("Cousin2", 14);
+//     chart1.add_sub(Aunt.name, Cousin2.name);
 
-//     // cout << *it << " ";
-//     // cout << *it++ << " " << *it << " ";
+//     //add another field and check that it works
+//     Person GreatUncle("GreatUncle", 62);
+//     chart1.add_sub(Great_GrandFather.name, GreatUncle.name);
 
-//     // vector<worker> employees;
-//     // worker a;
-//     // a.name = "aa";
-//     // worker b;
-//     // b.name = "bb";
-//     // employees.emplace_back(a);
-//     // employees.emplace_back(b);
-
-//     // employees.at(0).his_workers.emplace_back(&b);
-//     // cout<< employees.at(0).his_workers.at(0)->name;
-    
-
-//     // string a[3];
-//     // a[0] = "aaa";
-//     // a[1] = "bbb";
-//     // a[2] = "ccc";
-//     // string* b = a;
-//     // cout << b[2] << "\n";
+//     // test reverse level order
+//     for (auto it = chart1.begin_reverse_order(); it != chart1.reverse_order(); ++it) {
+//         cout << *it << " ";
+//     }
+//     cout << '\n';
 
 // }

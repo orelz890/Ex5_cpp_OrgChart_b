@@ -60,7 +60,6 @@ namespace ariel
 
         public:
         my_iterator(){
-            // root.clear();
             this->root = NULL;
         }
 
@@ -68,7 +67,7 @@ namespace ariel
             this->root = emps;
         }
 
-        T& operator*() const{
+        T& operator*() const{            
             return this->root->name;
         }
 
@@ -88,11 +87,13 @@ namespace ariel
         }
 
         bool operator==(const my_iterator& element) const{
-            return this->root->name == *element;
+            // return this->root->name == *element;
+            return this->root == element.root;
         }
 
         bool operator!=(const my_iterator& element) const{
-            return !(this->root->name == *element);
+            return !(*this == element);
+            // return !(this->root->name == *element);
         }
 
     };

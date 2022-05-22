@@ -10,14 +10,36 @@ namespace ariel
     OrgChart::OrgChart()
     {
         this->size = 0;
-        int longest_str = 0;
+        this->longest_str = 0;
         this->root = NULL;
-        this->end_of_order = NULL;
+        reverse_root = NULL;
     }
 
+    OrgChart::~OrgChart()
+    {
+        this->level_order_tree();
+        employee* emp = this->root;
+        employee* temp = NULL;
+        while (emp != NULL)
+        {
+            temp = emp->next_in_line;
+            delete emp;
+            emp = temp;
+        }
+        
+    }
+
+    bool is_empty(string& a){
+        if (a.empty())
+        {
+            throw runtime_error("The input is empty!");
+        }
+        return a.empty();
+    }
     // Funcs
     OrgChart& OrgChart::add_root(string supirior_name)
     {
+        is_empty(supirior_name);
         if (this->root != NULL)
         {
             this->root->name = supirior_name;
@@ -33,13 +55,20 @@ namespace ariel
 
     OrgChart& OrgChart::add_sub(string supirior_name, string new_emp_name)
     {
+        is_empty(supirior_name);
+        is_empty(new_emp_name);
+        if (this->root == NULL)
+        {
+            throw runtime_error("can't add sub before root");
+        }
+        bool legal = false;
         if (this->root->name != supirior_name)
         {
             bool flag = true;
             queue<employee*> Q;
             Q.push(this->root);
-            employee* sup;
-            employee* sub;
+            employee* sup = NULL;
+            employee* sub = NULL;
             while (!Q.empty() && flag)
             {
                 sup = Q.front();
@@ -47,11 +76,12 @@ namespace ariel
                 {
                     for (unsigned long i = 0; i < sup->his_emps.size(); i++){
                         sub = sup->his_emps.at(i);
-                        cout << sup->name << " is " << sub->name << "'s supirior\n";
+                        // cout << sup->name << " is " << sub->name << "'s supirior\n";
                         // sleep(1);
                         Q.push(sub);
                         if (sub->name == supirior_name)
                         {
+                            legal = true;
                             employee* new_emp = new employee(new_emp_name,sub);
                             sub->his_emps.push_back(new_emp);
                             this->size++;
@@ -65,10 +95,17 @@ namespace ariel
         }
         else
         {
+            legal = true;
             employee* new_emp = new employee(new_emp_name,this->root);
             this->root->his_emps.push_back(new_emp);
             this->size++;
         }
+
+        if (!legal)
+        {
+            throw runtime_error("employer doesn't exist");
+        }
+        
         return *this;
     }
 
@@ -80,7 +117,7 @@ namespace ariel
         {
             queue<employee*> Q;
             Q.push(this->root);
-            employee* supirior;
+            employee* supirior = NULL;
             while (!Q.empty())
             {
                 supirior = Q.front();
@@ -94,11 +131,10 @@ namespace ariel
                 // cout << "curr child = " << supirior->name << " and he has " 
                 //      << supirior->his_emps.size() << " kids\n"; 
                      
-                for (unsigned long j = 0; j < supirior->his_emps.size(); j++)
+                for (size_t j = 0; j < supirior->his_emps.size(); j++)
                 {
-                    Q.push(supirior->his_emps.at(j));
+                    Q.push(supirior->his_emps.at((unsigned long)j));
                 }
-                this->end_of_order = supirior;
                 Q.pop();
             }
         }
@@ -117,7 +153,7 @@ namespace ariel
         {
             
             S.push(this->root);
-            employee* supirior;
+            employee* supirior = NULL;
             while (!S.empty())
             {
                 supirior = S.top();
@@ -128,9 +164,8 @@ namespace ariel
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
                 // ans[i++] = supirior->name;
-                this->end_of_order = supirior;
                 S.pop();
-                for (int j = supirior->his_emps.size() - 1; j >= 0; j--)
+                for (int j = (int)supirior->his_emps.size() - 1; j >= 0; j--)
                 {
                     S.push(supirior->his_emps.at((unsigned int)j));
                 }
@@ -146,11 +181,12 @@ namespace ariel
     void OrgChart::reverse_order_tree(){
         // string ans[this->size];
         employee* last_emp = NULL;
+        this->reverse_root = NULL;
         if (this->size > 0)
         {
         
             int i = 0;
-            employee* supirior;
+            employee* supirior = NULL;
             stack<employee*> S;
             queue<employee*> Q;
             Q.push(this->root);
@@ -161,7 +197,7 @@ namespace ariel
                 Q.pop();
                 S.push(supirior);
                 // Push his subordinates from right to left to our queue
-                for (int j = supirior->his_emps.size() - 1; j >= 0; j--)
+                for (int j = (int)supirior->his_emps.size() - 1; j >= 0; j--)
                 {
                     Q.push(supirior->his_emps.at((unsigned int)j));
                 }
@@ -169,6 +205,11 @@ namespace ariel
             while (!S.empty())
             {
                 supirior = S.top();
+                if (this->reverse_root == NULL)
+                {
+                    this->reverse_root = supirior;
+                }
+                
                 if (last_emp != NULL)
                 {
                     last_emp->next_in_line = supirior;
@@ -176,7 +217,6 @@ namespace ariel
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
                 // ans[i++] = supirior->name;
-                this->end_of_order = supirior;
                 S.pop();
             }
 
@@ -200,42 +240,68 @@ namespace ariel
 
     my_iterator<string> OrgChart::begin_level_order()
     {
+        if (this->root == NULL)
+        {
+            throw runtime_error("chart is empty!");
+        }
         this->level_order_tree();
         return my_iterator<string>{this->root};
     }
 
     my_iterator<string> OrgChart::end_level_order()
     {
-        return my_iterator<string>{this->end_of_order};
+        if (this->root == NULL)
+        {
+            throw runtime_error("chart is empty!");
+        }
+        // this->level_order_tree();
+        return my_iterator<string>{};
     }
 
     my_iterator<string> OrgChart::begin_reverse_order()
     {
+        if (this->root == NULL)
+        {
+            throw runtime_error("chart is empty!");
+        }
         this->reverse_order_tree();
-        return my_iterator<string>{this->root};
+        return my_iterator<string>{this->reverse_root};
     }
 
     my_iterator<string> OrgChart::reverse_order()
     {
-        return my_iterator<string>{this->end_of_order};
+        if (this->root == NULL)
+        {
+            throw runtime_error("chart is empty!");
+        }
+        // this->reverse_order_tree();
+        return my_iterator<string>{};
     }
 
     my_iterator<string> OrgChart::begin_preorder()
     {
+        if (this->root == NULL)
+        {
+            throw runtime_error("chart is empty!");
+        }
         this->pre_order_tree();
         return my_iterator<string>{this->root};
     }
 
     my_iterator<string> OrgChart::end_preorder()
     {
-        return my_iterator<string>{this->end_of_order};
+        if (this->root == NULL)
+        {
+            throw runtime_error("chart is empty!");
+        } 
+        // this->pre_order_tree();   
+        return my_iterator<string>{};
     }
 
     // Operators
     ostream &operator<<(ostream &output, OrgChart &new_data)
     {
         // string *level_order_it = new_data.begin_level_order();
-        int size = new_data.size;
         map<pair<string, string>, int> mat;
         unsigned long longest_str = 0;
         vector<string> all_emps;
@@ -243,7 +309,7 @@ namespace ariel
         // Find the longest name & fill the mat --> if a is b's subordinate than mat(a,b) = 1 else mat(a,b) = 0.
         queue<employee*> Q;
         Q.push(new_data.root);
-        employee* emp;
+        employee* emp = NULL;
         while (!Q.empty())
         {
             emp = Q.front();
@@ -258,9 +324,9 @@ namespace ariel
             Q.pop();
         }
 
-        for (string sup : all_emps)
+        for (string& sup : all_emps)
         {
-            for (string sub : all_emps)
+            for (string& sub : all_emps)
             {
                 pair<string,string> key = {sup,sub};
                 mat[key] = 0;
