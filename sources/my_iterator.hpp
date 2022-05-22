@@ -42,7 +42,7 @@ namespace ariel
             this->name = w->name;
             this->supirior = w->supirior;
             this->supirior_name = w->supirior_name;
-            // this->his_workers = w->his_workers;
+            this->next_in_line = w->next_in_line;
             for (employee* emp : w->his_emps)
             {
                 // this->his_workers.push_back(emp);
@@ -61,6 +61,7 @@ namespace ariel
         public:
         my_iterator(){
             // root.clear();
+            this->root = NULL;
         }
 
         my_iterator(employee* emps){
@@ -68,7 +69,7 @@ namespace ariel
         }
 
         T& operator*() const{
-            return root->name;
+            return this->root->name;
         }
 
         T* operator->() const{

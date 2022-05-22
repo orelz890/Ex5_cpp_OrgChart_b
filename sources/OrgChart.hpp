@@ -21,6 +21,7 @@ namespace ariel
         employee* root;
         int size;
         int longest_str;
+        employee* end_of_order;
 
         public:
         

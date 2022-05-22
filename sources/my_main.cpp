@@ -5,6 +5,9 @@
 
 // #include "OrgChart.hpp"
 
+// // How to run:
+// // g++ OrgChart.cpp my_iterator.cpp my_main.cpp my_iterator.hpp OrgChart.hpp
+
 // using namespace std;
 // using namespace ariel;
 // int main(){
@@ -34,6 +37,10 @@
     
 
 //     my_iterator<string> it= organization.begin();
+//     for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it)
+//     {
+//         cout << (*it) << " " ;
+//     } // prints: CEO CTO CFO COO VP_SW VP_BI
 
 //     // cout << *it << " ";
 //     // cout << *it++ << " " << *it << " ";

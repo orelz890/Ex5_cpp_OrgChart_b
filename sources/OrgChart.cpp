@@ -1,8 +1,6 @@
 // In this part i was aided by this site:
 // https://www.geeksforgeeks.org/reverse-level-order-traversal
 
-// How to run:
-//g++ OrgChart.cpp my_iterator.cpp my_main.cpp my_iterator.hpp OrgChart.hpp
 
 #include "OrgChart.hpp"
 #include <unistd.h>
@@ -14,6 +12,7 @@ namespace ariel
         this->size = 0;
         int longest_str = 0;
         this->root = NULL;
+        this->end_of_order = NULL;
     }
 
     // Funcs
@@ -74,7 +73,7 @@ namespace ariel
     }
 
     void OrgChart::level_order_tree(){
-        string ans[this->size];
+        // string ans[this->size];
         employee* last_emp = NULL;
         int i = 0;
         if (this->size > 0)
@@ -91,7 +90,7 @@ namespace ariel
                 }
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
-                ans[i++] = supirior->name;
+                // ans[i++] = supirior->name;
                 // cout << "curr child = " << supirior->name << " and he has " 
                 //      << supirior->his_emps.size() << " kids\n"; 
                      
@@ -99,17 +98,18 @@ namespace ariel
                 {
                     Q.push(supirior->his_emps.at(j));
                 }
+                this->end_of_order = supirior;
                 Q.pop();
             }
         }
-        for (string& s : ans)
-        {
-            cout << s << "\n";
-        }
+        // for (string& s : ans)
+        // {
+        //     cout << s << "\n";
+        // }
     }
 
     void OrgChart::pre_order_tree(){
-        string ans[this->size];
+        // string ans[this->size];
         employee* last_emp = NULL;
         int i = 0;
         stack<employee*> S;
@@ -127,7 +127,8 @@ namespace ariel
                 }
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
-                ans[i++] = supirior->name;
+                // ans[i++] = supirior->name;
+                this->end_of_order = supirior;
                 S.pop();
                 for (int j = supirior->his_emps.size() - 1; j >= 0; j--)
                 {
@@ -135,15 +136,15 @@ namespace ariel
                 }
             }
 
-            for (string& s : ans)
-            {
-                cout << s << "\n";
-            }
+            // for (string& s : ans)
+            // {
+            //     cout << s << "\n";
+            // }
         }
     }
 
     void OrgChart::reverse_order_tree(){
-        string ans[this->size];
+        // string ans[this->size];
         employee* last_emp = NULL;
         if (this->size > 0)
         {
@@ -174,14 +175,15 @@ namespace ariel
                 }
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
-                ans[i++] = supirior->name;
+                // ans[i++] = supirior->name;
+                this->end_of_order = supirior;
                 S.pop();
             }
 
-            for (string& s : ans)
-            {
-                cout << s << "\n";
-            }
+            // for (string& s : ans)
+            // {
+            //     cout << s << "\n";
+            // }
         }
     }
 
@@ -204,7 +206,7 @@ namespace ariel
 
     my_iterator<string> OrgChart::end_level_order()
     {
-        return my_iterator<string>{};
+        return my_iterator<string>{this->end_of_order};
     }
 
     my_iterator<string> OrgChart::begin_reverse_order()
@@ -215,7 +217,7 @@ namespace ariel
 
     my_iterator<string> OrgChart::reverse_order()
     {
-        return my_iterator<string>{};
+        return my_iterator<string>{this->end_of_order};
     }
 
     my_iterator<string> OrgChart::begin_preorder()
@@ -226,7 +228,7 @@ namespace ariel
 
     my_iterator<string> OrgChart::end_preorder()
     {
-        return my_iterator<string>{};
+        return my_iterator<string>{this->end_of_order};
     }
 
     // Operators
@@ -268,7 +270,7 @@ namespace ariel
         // Pritty drawing
         output << '\n'
                << string((longest_str - new_data.root->name.size())/2, ' ') << "p\\c" 
-               << string(longest_str - (longest_str - new_data.root->name.size())/2 -2, ' ') << '|';
+               << string(longest_str - (longest_str - new_data.root->name.size())/2 -3, ' ') << '|';
         
         Q.push(new_data.root);
         while (!Q.empty())
