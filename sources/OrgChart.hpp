@@ -25,14 +25,13 @@ namespace ariel
         
         // Constructors
         OrgChart();
+        OrgChart(OrgChart* other);
         ~OrgChart();
         // Getter & setters
         int get_size(){
             return size;
         }
-        employee* get_root(){
-            return this->root;
-        }
+        employee* get_root();
 
         // Helpers:
         void level_order_tree();
@@ -54,6 +53,8 @@ namespace ariel
         my_iterator<std::string> end_preorder();
 
         // Operators
+        OrgChart& operator=(const OrgChart& other);
+
         friend std::ostream& operator<<(std::ostream& output, OrgChart& new_data);
 
     };

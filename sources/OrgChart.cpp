@@ -12,12 +12,17 @@ namespace ariel
         this->size = 0;
         this->longest_str = 0;
         this->root = NULL;
-        reverse_root = NULL;
+        this->reverse_root = NULL;
     }
 
+    OrgChart::OrgChart(OrgChart* other) : OrgChart()   // ======================
+    {
+        *this = *other;
+    }
+    
     OrgChart::~OrgChart()
     {
-        this->level_order_tree();
+        // this->level_order_tree();
         employee* emp = this->root;
         employee* temp = NULL;
         while (emp != NULL)
@@ -26,7 +31,50 @@ namespace ariel
             delete emp;
             emp = temp;
         }
-        
+    }
+
+    OrgChart& OrgChart::operator=(const OrgChart& other) // ====================
+    {
+        if (&other != this)
+        {
+            // Delete old data
+            this->~OrgChart();
+
+            // Zero the chart
+            this->size = 0;
+            this->longest_str = 0;
+            this->root = NULL;
+            this->reverse_root = NULL;
+
+            // Input the new data
+            if (other.size > 0)
+            {
+                std::queue<employee*> Q;
+                Q.push(other.root);
+                employee* supirior = NULL;
+                while (!Q.empty())
+                {
+                    supirior = Q.front();
+                    // Add the root first
+                    if (supirior->name == other.root->name)
+                    {
+                        this->add_root(supirior->name);
+                    }
+                    for (size_t j = 0; j < supirior->his_emps.size(); j++)
+                    {
+                        // Add the subordinates of every supirior
+                        this->add_sub(supirior->name,supirior->his_emps.at((unsigned long)j)->name);
+                        Q.push(supirior->his_emps.at((unsigned long)j));
+                    }
+                    Q.pop();
+                }
+            }
+        }
+        return *this;
+    }
+
+    employee* OrgChart::get_root(){
+        return this->root;
     }
 
     bool is_empty(std::string& a){
