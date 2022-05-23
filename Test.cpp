@@ -158,8 +158,46 @@ TEST_CASE("Good tests"){
         CHECK(i->compare("top1") == 0);
         CHECK(i == chart2.begin_preorder());
         CHECK(i != chart2.reverse_order());
-    }    
+    }
 
+    // =============================================
+    // Check OrgChart copy constructor & operator= 
+    // =============================================
+
+    OrgChart chart3;
+    chart3.add_root("CEO")
+      .add_sub("CEO", "CTO")
+      .add_sub("CEO", "CFO")
+      .add_sub("CEO", "COO")
+      .add_sub("CTO", "VP_SW")
+      .add_sub("COO", "VP_BI");
+
+    // Copy constructor
+    OrgChart chart4{chart3};
+
+    CHECK(chart3.get_size() == chart4.get_size());
+    for (auto i = chart3.begin_level_order(), j = chart4.begin_level_order();
+        i != chart3.end_level_order() && j != chart4.end_level_order(); ++i, ++j)
+    {
+        CHECK(*i == *j);
+    }
+    
+    // Operator=
+    OrgChart chart5;
+    chart5 = chart3;
+    for (auto i = chart3.begin_level_order(), j = chart5.begin_level_order();
+        i != chart3.end_level_order() && j != chart5.end_level_order(); ++i, ++j)
+    {
+        CHECK(*i == *j);
+    }
+    OrgChart chart6;
+    chart6.add_root("temp").add_sub("temp","temp2");
+    chart6 = chart3;
+    for (auto i = chart3.begin_level_order(), j = chart6.begin_level_order();
+        i != chart3.end_level_order() && j != chart6.end_level_order(); ++i, ++j)
+    {
+        CHECK(*i == *j);
+    }
 }
 
 
