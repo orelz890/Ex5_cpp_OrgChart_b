@@ -1,3 +1,5 @@
+// How to run:
+// g++ OrgChart.cpp my_iterator.cpp Test.cpp my_iterator.hpp OrgChart.hpp doctest.h TestRunner.cpp
 #include "doctest.h"
 #include <iostream>
 #include <string>
