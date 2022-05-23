@@ -22,10 +22,10 @@ namespace ariel
         int longest_str;
 
         public:
-        
+
         // Constructors
         OrgChart();
-        OrgChart(OrgChart* other);
+        OrgChart(const OrgChart& other);
         ~OrgChart();
         // Getter & setters
         int get_size(){

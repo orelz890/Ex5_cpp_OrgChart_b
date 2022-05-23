@@ -15,14 +15,14 @@ namespace ariel
         this->reverse_root = NULL;
     }
 
-    OrgChart::OrgChart(OrgChart* other) : OrgChart()   // ======================
+    OrgChart::OrgChart(const OrgChart& other) : OrgChart()
     {
-        *this = *other;
+        *this = other;
     }
     
     OrgChart::~OrgChart()
     {
-        // this->level_order_tree();
+        this->level_order_tree();
         employee* emp = this->root;
         employee* temp = NULL;
         while (emp != NULL)
@@ -33,13 +33,15 @@ namespace ariel
         }
     }
 
-    OrgChart& OrgChart::operator=(const OrgChart& other) // ====================
+    OrgChart& OrgChart::operator=(const OrgChart& other)
     {
         if (&other != this)
         {
             // Delete old data
-            this->~OrgChart();
-
+            if (this->root != NULL)
+            {
+                this->~OrgChart();
+            }
             // Zero the chart
             this->size = 0;
             this->longest_str = 0;
