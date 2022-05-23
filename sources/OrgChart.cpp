@@ -34,6 +34,19 @@ namespace ariel
         {
             throw std::runtime_error("The input is empty!");
         }
+        bool flag = false;
+        for (char& c : a)
+        {
+            if (c != ' ')
+            {
+                flag = true;
+            }
+        }
+        if (!flag)
+        {
+            throw std::runtime_error("The name should not contain only spaces..");
+        }
+        
         return a.empty();
     }
     // Funcs

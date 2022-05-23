@@ -197,6 +197,9 @@ TEST_CASE("Bad tests"){
     CHECK_THROWS(chart.add_root(""));
     CHECK_THROWS(chart.add_sub("", "top8"));
     CHECK_THROWS(chart.add_sub("top8", ""));
+    CHECK_THROWS(chart.add_root(" "));
+    CHECK_THROWS(chart.add_sub("top1"," "));
+    CHECK_THROWS(chart.add_root("    "));
 
     // Empty chart
     CHECK_THROWS(empty_chart.begin_level_order());
