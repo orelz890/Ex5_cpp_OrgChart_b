@@ -29,15 +29,15 @@ namespace ariel
         
     }
 
-    bool is_empty(string& a){
+    bool is_empty(std::string& a){
         if (a.empty())
         {
-            throw runtime_error("The input is empty!");
+            throw std::runtime_error("The input is empty!");
         }
         return a.empty();
     }
     // Funcs
-    OrgChart& OrgChart::add_root(string supirior_name)
+    OrgChart& OrgChart::add_root(std::string supirior_name)
     {
         is_empty(supirior_name);
         if (this->root != NULL)
@@ -53,19 +53,19 @@ namespace ariel
         return *this;
     }
 
-    OrgChart& OrgChart::add_sub(string supirior_name, string new_emp_name)
+    OrgChart& OrgChart::add_sub(std::string supirior_name, std::string new_emp_name)
     {
         is_empty(supirior_name);
         is_empty(new_emp_name);
         if (this->root == NULL)
         {
-            throw runtime_error("can't add sub before root");
+            throw std::runtime_error("can't add sub before root");
         }
         bool legal = false;
         if (this->root->name != supirior_name)
         {
             bool flag = true;
-            queue<employee*> Q;
+            std::queue<employee*> Q;
             Q.push(this->root);
             employee* sup = NULL;
             employee* sub = NULL;
@@ -76,8 +76,6 @@ namespace ariel
                 {
                     for (unsigned long i = 0; i < sup->his_emps.size(); i++){
                         sub = sup->his_emps.at(i);
-                        // cout << sup->name << " is " << sub->name << "'s supirior\n";
-                        // sleep(1);
                         Q.push(sub);
                         if (sub->name == supirior_name)
                         {
@@ -103,19 +101,18 @@ namespace ariel
 
         if (!legal)
         {
-            throw runtime_error("employer doesn't exist");
+            throw std::runtime_error("employer doesn't exist");
         }
         
         return *this;
     }
 
     void OrgChart::level_order_tree(){
-        // string ans[this->size];
         employee* last_emp = NULL;
         int i = 0;
         if (this->size > 0)
         {
-            queue<employee*> Q;
+            std::queue<employee*> Q;
             Q.push(this->root);
             employee* supirior = NULL;
             while (!Q.empty())
@@ -126,11 +123,7 @@ namespace ariel
                     last_emp->next_in_line = supirior;
                 }
                 last_emp = supirior;
-                last_emp->next_in_line = NULL;
-                // ans[i++] = supirior->name;
-                // cout << "curr child = " << supirior->name << " and he has " 
-                //      << supirior->his_emps.size() << " kids\n"; 
-                     
+                last_emp->next_in_line = NULL; 
                 for (size_t j = 0; j < supirior->his_emps.size(); j++)
                 {
                     Q.push(supirior->his_emps.at((unsigned long)j));
@@ -138,17 +131,12 @@ namespace ariel
                 Q.pop();
             }
         }
-        // for (string& s : ans)
-        // {
-        //     cout << s << "\n";
-        // }
     }
 
     void OrgChart::pre_order_tree(){
-        // string ans[this->size];
         employee* last_emp = NULL;
         int i = 0;
-        stack<employee*> S;
+        std::stack<employee*> S;
         if (this->size > 0)
         {
             
@@ -163,23 +151,17 @@ namespace ariel
                 }
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
-                // ans[i++] = supirior->name;
                 S.pop();
                 for (int j = (int)supirior->his_emps.size() - 1; j >= 0; j--)
                 {
                     S.push(supirior->his_emps.at((unsigned int)j));
                 }
             }
-
-            // for (string& s : ans)
-            // {
-            //     cout << s << "\n";
-            // }
         }
+
     }
 
     void OrgChart::reverse_order_tree(){
-        // string ans[this->size];
         employee* last_emp = NULL;
         this->reverse_root = NULL;
         if (this->size > 0)
@@ -187,8 +169,8 @@ namespace ariel
         
             int i = 0;
             employee* supirior = NULL;
-            stack<employee*> S;
-            queue<employee*> Q;
+            std::stack<employee*> S;
+            std::queue<employee*> Q;
             Q.push(this->root);
 
             while (!Q.empty())
@@ -196,7 +178,6 @@ namespace ariel
                 supirior = Q.front();
                 Q.pop();
                 S.push(supirior);
-                // Push his subordinates from right to left to our queue
                 for (int j = (int)supirior->his_emps.size() - 1; j >= 0; j--)
                 {
                     Q.push(supirior->his_emps.at((unsigned int)j));
@@ -216,98 +197,91 @@ namespace ariel
                 }
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
-                // ans[i++] = supirior->name;
                 S.pop();
             }
-
-            // for (string& s : ans)
-            // {
-            //     cout << s << "\n";
-            // }
         }
+
     }
 
     // Iterators
-    my_iterator<string> OrgChart::begin()
+    my_iterator<std::string> OrgChart::begin()
     {
         return begin_level_order();
     }
 
-    my_iterator<string> OrgChart::end()
+    my_iterator<std::string> OrgChart::end()
     {
         return end_level_order();
     }
 
-    my_iterator<string> OrgChart::begin_level_order()
+    my_iterator<std::string> OrgChart::begin_level_order()
     {
         if (this->root == NULL)
         {
-            throw runtime_error("chart is empty!");
+            throw std::runtime_error("chart is empty!");
         }
         this->level_order_tree();
-        return my_iterator<string>{this->root};
+        return my_iterator<std::string>{this->root};
     }
 
-    my_iterator<string> OrgChart::end_level_order()
+    my_iterator<std::string> OrgChart::end_level_order()
     {
         if (this->root == NULL)
         {
-            throw runtime_error("chart is empty!");
+            throw std::runtime_error("chart is empty!");
         }
         // this->level_order_tree();
-        return my_iterator<string>{};
+        return my_iterator<std::string>{};
     }
 
-    my_iterator<string> OrgChart::begin_reverse_order()
+    my_iterator<std::string> OrgChart::begin_reverse_order()
     {
         if (this->root == NULL)
         {
-            throw runtime_error("chart is empty!");
+            throw std::runtime_error("chart is empty!");
         }
         this->reverse_order_tree();
-        return my_iterator<string>{this->reverse_root};
+        return my_iterator<std::string>{this->reverse_root};
     }
 
-    my_iterator<string> OrgChart::reverse_order()
+    my_iterator<std::string> OrgChart::reverse_order()
     {
         if (this->root == NULL)
         {
-            throw runtime_error("chart is empty!");
+            throw std::runtime_error("chart is empty!");
         }
-        // this->reverse_order_tree();
-        return my_iterator<string>{};
+        return my_iterator<std::string>{};
     }
 
-    my_iterator<string> OrgChart::begin_preorder()
+    my_iterator<std::string> OrgChart::begin_preorder()
     {
         if (this->root == NULL)
         {
-            throw runtime_error("chart is empty!");
+            throw std::runtime_error("chart is empty!");
         }
         this->pre_order_tree();
-        return my_iterator<string>{this->root};
+        return my_iterator<std::string>{this->root};
     }
 
-    my_iterator<string> OrgChart::end_preorder()
+    my_iterator<std::string> OrgChart::end_preorder()
     {
         if (this->root == NULL)
         {
-            throw runtime_error("chart is empty!");
+            throw std::runtime_error("chart is empty!");
         } 
-        // this->pre_order_tree();   
-        return my_iterator<string>{};
+        return my_iterator<std::string>{};
     }
 
     // Operators
-    ostream &operator<<(ostream &output, OrgChart &new_data)
+    std::ostream &operator<<(std::ostream &output, OrgChart &new_data)
     {
         // string *level_order_it = new_data.begin_level_order();
-        map<pair<string, string>, int> mat;
+        std::map<std::pair<std::string, std::string>, int> mat;
         unsigned long longest_str = 0;
-        vector<string> all_emps;
+        std::vector<std::string> all_emps;
 
         // Find the longest name & fill the mat --> if a is b's subordinate than mat(a,b) = 1 else mat(a,b) = 0.
-        queue<employee*> Q;
+        std::queue<employee*> Q;
         Q.push(new_data.root);
         employee* emp = NULL;
         while (!Q.empty())
@@ -324,55 +298,69 @@ namespace ariel
             Q.pop();
         }
 
-        for (string& sup : all_emps)
+        output << '\n' << std::string(longest_str/2 - 1, ' ') << "p\\c" << std::string(longest_str/2 - 1, ' ') << "|";
+        for (std::string& sup : all_emps)
         {
-            for (string& sub : all_emps)
+            if (sup != new_data.root->name)
             {
-                pair<string,string> key = {sup,sub};
+                std::cout << sup << "|";
+            }
+           
+            for (std::string& sub : all_emps)
+            {
+                std::pair<std::string,std::string> key = {sup,sub};
                 mat[key] = 0;
             }
         }
         
-        // Pritty drawing
-        output << '\n'
-               << string((longest_str - new_data.root->name.size())/2, ' ') << "p\\c" 
-               << string(longest_str - (longest_str - new_data.root->name.size())/2 -3, ' ') << '|';
-        
+        // Pretty drawing
+
+        int count_chars = 0;
         Q.push(new_data.root);
         while (!Q.empty())
         {
             emp = Q.front();
             for(employee* sub : emp->his_emps){
                 Q.push(sub);
-                pair<string, string> key = {emp->name, sub->name};
+                count_chars += (int)sub->name.length() + 1;
+                std::pair<std::string, std::string> key = {emp->name, sub->name};
                 mat[key] = 1;
-            }
-            // varifiying that child is not root
-            if(emp->supirior != NULL){
-                output <<string((longest_str - emp->name.size())/2, ' ') << emp->name 
-                    << string((longest_str - emp->name.size())/2 + 1, ' ') << '|';
             }
             Q.pop();
         }
-        output << '\n' << string((longest_str + 2) * (unsigned long)(new_data.size), '-') << '\n';
+        count_chars += (int)longest_str + 1;
+        output << '\n' << std::string((unsigned long)count_chars, '-') << '\n';
         
-        for (string& sup : all_emps)
+        for (std::string& sup : all_emps)
         {
-            output << string((longest_str - sup.size())/2, ' ') << sup 
-                << string((longest_str - sup.size())/2 , ' ') << '|';
-            
-            for (string& sub : all_emps)
+            if (sup.length()%2 == 0)
+            {
+                output << std::string((longest_str - sup.length())/2, ' ') << sup 
+                    << std::string((longest_str - sup.length())/2 + 1 , ' ') << '|';
+            }
+            else{
+                output << std::string((longest_str - sup.length())/2, ' ') << sup 
+                    << std::string((longest_str - sup.length())/2 , ' ') << '|';
+            }
+            for (std::string& sub : all_emps)
             {
                 if (sub != new_data.root->name)
                 {
-                    pair<string, string> pos = {sup,sub};
-                    output << string(longest_str / 2, ' ') << mat.at(pos)
-                        << string(longest_str - (longest_str / 2), ' ') << '|';
+                    std::pair<std::string, std::string> pos = {sup,sub};
+                    if (sub.length()%2 == 0)
+                    {
+                        output << std::string((sub.length()) / 2 - 1, ' ') << mat.at(pos)
+                            << std::string((sub.length()) / 2, ' ') << '|';
+                    }
+                    else
+                    {
+                        output << std::string((sub.length()) / 2, ' ') << mat.at(pos)
+                            << std::string((sub.length()) / 2, ' ') << '|';
+                    }
                 }
                 
             }
-            // output << "\n";
-            output << "\n" << string((longest_str + 2) * (unsigned long)(new_data.size), '-') << '\n';            
+            output << "\n" << std::string((unsigned long)count_chars, '-') << '\n';            
         }
         
         return output << '\n';

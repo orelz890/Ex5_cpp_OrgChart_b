@@ -7,27 +7,25 @@
 #include <iostream>
 
 
-using namespace std;
-
 namespace ariel
 {
     typedef struct employee
     {
-        string name;
-        string supirior_name;
+        std::string name;
+        std::string supirior_name;
         employee* supirior;
         employee* next_in_line;
-        vector<employee*> his_emps;
+        std::vector<employee*> his_emps;
 
 
-        employee(string name, string supirior){
+        employee(std::string name, std::string supirior){
             this->name = name;
             this->supirior_name = supirior;
             this->supirior = NULL;
             this->next_in_line = NULL;
         }
 
-        employee(string name, employee* sup)
+        employee(std::string name, employee* sup)
         {
             this->name = name;
             this->supirior = sup;
@@ -45,7 +43,6 @@ namespace ariel
             this->next_in_line = w->next_in_line;
             for (employee* emp : w->his_emps)
             {
-                // this->his_workers.push_back(emp);
                 this->his_emps.insert(this->his_emps.end(),emp);
             }
             

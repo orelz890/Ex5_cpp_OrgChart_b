@@ -9,8 +9,6 @@ const int REVERSE_ORDER = 1;
 const int LEVEL_ORDER = 2;
 const int PRE_ORDER = 3;
 
-using namespace std;
-
 namespace ariel
 {
     
@@ -42,21 +40,21 @@ namespace ariel
         void reverse_order_tree();
 
         // Funcs
-        OrgChart& add_root(string supirior_name);
-        OrgChart& add_sub(string supirior_name, string new_emp_name);
+        OrgChart& add_root(std::string supirior_name);
+        OrgChart& add_sub(std::string supirior_name, std::string new_emp_name);
 
         // Iterators
-        my_iterator<string> begin();
-        my_iterator<string> end();
-        my_iterator<string> begin_level_order();
-        my_iterator<string> end_level_order();
-        my_iterator<string> begin_reverse_order();
-        my_iterator<string> reverse_order();
-        my_iterator<string> begin_preorder();
-        my_iterator<string> end_preorder();
+        my_iterator<std::string> begin();
+        my_iterator<std::string> end();
+        my_iterator<std::string> begin_level_order();
+        my_iterator<std::string> end_level_order();
+        my_iterator<std::string> begin_reverse_order();
+        my_iterator<std::string> reverse_order();
+        my_iterator<std::string> begin_preorder();
+        my_iterator<std::string> end_preorder();
 
         // Operators
-        friend ostream& operator<<(ostream& output, OrgChart& new_data);
+        friend std::ostream& operator<<(std::ostream& output, OrgChart& new_data);
 
     };
 
