@@ -16,7 +16,7 @@ OBJECTS=$(subst sources/,objects/,$(subst .cpp,.o,$(SOURCES)))
 
 run: test
 
-test: TestRunner.o StudentTest1.o StudentTest2.o StudentTest3.o $(OBJECTS)
+test: TestRunner.o StudentTest1.o StudentTest2.o StudentTest3.o StudentTest4.o $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 %.o: %.cpp $(HEADERS)
@@ -36,6 +36,11 @@ StudentTest2.cpp:
 # Dvir Gev
 StudentTest3.cpp: 
 	curl https://raw.githubusercontent.com/dvirGev/CPP--Ex5-par1/main/Test.cpp > $@
+
+# Orel Zamler
+StudentTest4.cpp: 
+	curl https://raw.githubusercontent.com/orelz890/Ex5_cpp_OrgChart_a/main/Test.cpp > $@
+
 
 tidy:
 	clang-tidy $(SOURCES) $(TIDY_FLAGS) --

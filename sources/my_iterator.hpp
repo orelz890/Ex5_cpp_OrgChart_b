@@ -87,13 +87,11 @@ namespace ariel
         }
 
         bool operator==(const my_iterator& element) const{
-            // return this->root->name == *element;
             return this->root == element.root;
         }
 
         bool operator!=(const my_iterator& element) const{
             return !(*this == element);
-            // return !(this->root->name == *element);
         }
 
     };
