@@ -50,6 +50,7 @@
 //             cout << "Sub updated successfully!\n";
 //             break;
 //         case 3:
+//             cout << "\nLevel order is: ";
 //             for (auto i = chart.begin_level_order(); i != chart.end_level_order(); ++i)
 //             {
 //                 cout << *i << " ";
@@ -57,6 +58,7 @@
 //             cout << "\n";
 //             break;
 //         case 4:
+//             cout << "\nPre order is: ";
 //             for (auto i = chart.begin_preorder(); i != chart.end_preorder(); ++i)
 //             {
 //                 cout << *i << " ";
@@ -64,6 +66,7 @@
 //             cout << "\n";
 //             break;
 //         case 5:
+//             cout << "\nReverse order is: ";
 //             for (auto i = chart.begin_reverse_order(); i != chart.reverse_order(); ++i)
 //             {
 //                 cout << *i << " ";

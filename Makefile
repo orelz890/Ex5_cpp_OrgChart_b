@@ -41,9 +41,8 @@ StudentTest3.cpp:
 StudentTest4.cpp: 
 	curl https://raw.githubusercontent.com/orelz890/Ex5_cpp_OrgChart_a/main/Test.cpp > $@
 
-
 tidy:
-	clang-tidy $(SOURCES) $(TIDY_FLAGS) --
+	clang-tidy $(SOURCES) $(HEADERS) $(TIDY_FLAGS) --
 
 valgrind: test
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./test 2>&1 | { egrep "lost| at " || true; }

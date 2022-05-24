@@ -10,7 +10,6 @@ namespace ariel
     OrgChart::OrgChart()
     {
         this->size = 0;
-        this->longest_str = 0;
         this->root = NULL;
         this->reverse_root = NULL;
     }
@@ -19,7 +18,14 @@ namespace ariel
     {
         *this = other;
     }
-    
+
+
+    OrgChart::OrgChart(OrgChart&& other) noexcept : OrgChart()
+    {
+        *this = std::move(other);
+    }
+
+
     OrgChart::~OrgChart()
     {
         this->level_order_tree();
@@ -33,6 +39,12 @@ namespace ariel
         }
     }
 
+    OrgChart& OrgChart::operator=(OrgChart&& other) noexcept
+    {
+        *this = std::move(other);
+        return *this;
+    }
+
     OrgChart& OrgChart::operator=(const OrgChart& other)
     {
         if (&other != this)
@@ -44,7 +56,6 @@ namespace ariel
             }
             // Zero the chart
             this->size = 0;
-            this->longest_str = 0;
             this->root = NULL;
             this->reverse_root = NULL;
 
@@ -75,9 +86,6 @@ namespace ariel
         return *this;
     }
 
-    employee* OrgChart::get_root(){
-        return this->root;
-    }
 
     bool is_empty(std::string& a){
         if (a.empty())
@@ -118,6 +126,7 @@ namespace ariel
 
     OrgChart& OrgChart::add_sub(std::string supirior_name, std::string new_emp_name)
     {
+        // Check validity
         is_empty(supirior_name);
         is_empty(new_emp_name);
         if (this->root == NULL)
@@ -129,6 +138,8 @@ namespace ariel
         {
             bool flag = true;
             std::queue<employee*> Q;
+
+            // Enter the root(first element) to the queue
             Q.push(this->root);
             employee* sup = NULL;
             employee* sub = NULL;
@@ -137,11 +148,14 @@ namespace ariel
                 sup = Q.front();
                 if (!sup->his_emps.empty())
                 {
+                    // Add the current supirior emps to the queue
                     for (unsigned long i = 0; i < sup->his_emps.size(); i++){
                         sub = sup->his_emps.at(i);
                         Q.push(sub);
+                        // Check if the current subordinate is the supirioir of our new emp
                         if (sub->name == supirior_name)
                         {
+                            // Creat the new emp node and add it to his supirior emps
                             legal = true;
                             employee* new_emp = new employee(new_emp_name,sub);
                             sub->his_emps.push_back(new_emp);
@@ -156,12 +170,14 @@ namespace ariel
         }
         else
         {
+            // Creat the new emp node and add it to root emps
             legal = true;
             employee* new_emp = new employee(new_emp_name,this->root);
             this->root->his_emps.push_back(new_emp);
             this->size++;
         }
 
+        // If legal is still false it means we didn't add a new member to the chart therefore, throw exeption.. 
         if (!legal)
         {
             throw std::runtime_error("employer doesn't exist");
@@ -170,7 +186,9 @@ namespace ariel
         return *this;
     }
 
-    void OrgChart::level_order_tree(){
+    // For every node assign his next element in a level order mathod
+    void OrgChart::level_order_tree()
+    {
         employee* last_emp = NULL;
         int i = 0;
         if (this->size > 0)
@@ -181,12 +199,14 @@ namespace ariel
             while (!Q.empty())
             {
                 supirior = Q.front();
+                // Set the curent node next element
                 if (last_emp != NULL)
                 {
                     last_emp->next_in_line = supirior;
                 }
                 last_emp = supirior;
                 last_emp->next_in_line = NULL; 
+                // Add the current supirior emps to the queue
                 for (size_t j = 0; j < supirior->his_emps.size(); j++)
                 {
                     Q.push(supirior->his_emps.at((unsigned long)j));
@@ -196,17 +216,19 @@ namespace ariel
         }
     }
 
-    void OrgChart::pre_order_tree(){
+    // For every node assign his next element in a pre_order mathod
+    void OrgChart::pre_order_tree()
+    {
         employee* last_emp = NULL;
-        int i = 0;
         std::stack<employee*> S;
         if (this->size > 0)
         {
-            
+            // Add the root to the stack             
             S.push(this->root);
             employee* supirior = NULL;
             while (!S.empty())
             {
+                // Set the current node next element
                 supirior = S.top();
                 if (last_emp != NULL)
                 {
@@ -215,6 +237,7 @@ namespace ariel
                 last_emp = supirior;
                 last_emp->next_in_line = NULL;
                 S.pop();
+                // Add the current supirior emps to the stack
                 for (int j = (int)supirior->his_emps.size() - 1; j >= 0; j--)
                 {
                     S.push(supirior->his_emps.at((unsigned int)j));
@@ -224,36 +247,43 @@ namespace ariel
 
     }
 
-    void OrgChart::reverse_order_tree(){
-        employee* last_emp = NULL;
-        this->reverse_root = NULL;
+    // For every node assign his next element in a reverse order mathod
+    void OrgChart::reverse_order_tree()
+    {
         if (this->size > 0)
-        {
-        
-            int i = 0;
+        {        
+            employee* last_emp = NULL;
+            this->reverse_root = NULL;
             employee* supirior = NULL;
+            
             std::stack<employee*> S;
             std::queue<employee*> Q;
+            
+            // Add the root to the queue
             Q.push(this->root);
 
             while (!Q.empty())
             {
                 supirior = Q.front();
                 Q.pop();
+                // Add the current supirior to the stack
                 S.push(supirior);
+                // Add his emps to the queue
                 for (int j = (int)supirior->his_emps.size() - 1; j >= 0; j--)
                 {
                     Q.push(supirior->his_emps.at((unsigned int)j));
                 }
             }
+            // Now we have a stack filled with all of our emps, but when we pop an element the last element added will be poped..
             while (!S.empty())
             {
                 supirior = S.top();
+                // set the new root as the first element poped
                 if (this->reverse_root == NULL)
                 {
                     this->reverse_root = supirior;
                 }
-                
+                // Set every node next element                
                 if (last_emp != NULL)
                 {
                     last_emp->next_in_line = supirior;
@@ -293,7 +323,6 @@ namespace ariel
         {
             throw std::runtime_error("chart is empty!");
         }
-        // this->level_order_tree();
         return my_iterator<std::string>{};
     }
 
@@ -338,6 +367,12 @@ namespace ariel
     // Operators
     std::ostream &operator<<(std::ostream &output, OrgChart &new_data)
     {
+        
+        if (new_data.root == NULL)
+        {
+            throw std::runtime_error("Can't print an empty chart..");
+        }
+        
         // string *level_order_it = new_data.begin_level_order();
         std::map<std::pair<std::string, std::string>, int> mat;
         unsigned long longest_str = 0;
@@ -361,7 +396,8 @@ namespace ariel
             Q.pop();
         }
 
-        output << '\n' << std::string(longest_str/2 - 1, ' ') << "p\\c" << std::string(longest_str/2 - 1, ' ') << "|";
+        // Pretty drawing
+        output << '\n' << "p\\c" << std::string(longest_str - 3, ' ') << "|";
         for (std::string& sup : all_emps)
         {
             if (sup != new_data.root->name)
@@ -376,8 +412,6 @@ namespace ariel
             }
         }
         
-        // Pretty drawing
-
         int count_chars = 0;
         Q.push(new_data.root);
         while (!Q.empty())
@@ -396,15 +430,8 @@ namespace ariel
         
         for (std::string& sup : all_emps)
         {
-            if (sup.length()%2 == 0)
-            {
-                output << std::string((longest_str - sup.length())/2, ' ') << sup 
-                    << std::string((longest_str - sup.length())/2 + 1 , ' ') << '|';
-            }
-            else{
-                output << std::string((longest_str - sup.length())/2, ' ') << sup 
-                    << std::string((longest_str - sup.length())/2 , ' ') << '|';
-            }
+            output << sup << std::string(longest_str - sup.length() , ' ') << '|';
+
             for (std::string& sub : all_emps)
             {
                 if (sub != new_data.root->name)
