@@ -14,7 +14,7 @@ const int PRE_ORDER = 3;
 
 namespace ariel
 {
-    struct employee
+    typedef struct employee
     {
         public:
         std::string name;
@@ -59,7 +59,7 @@ namespace ariel
                 
             return *this;
         }
-    };
+    }employee;
 
 
     template<typename T> class my_iterator{

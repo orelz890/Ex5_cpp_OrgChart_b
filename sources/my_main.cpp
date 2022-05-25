@@ -6,7 +6,7 @@
 // #include "OrgChart.hpp"
 
 // // How to run:
-// // g++ OrgChart.cpp my_iterator.cpp my_main.cpp my_iterator.hpp OrgChart.hpp
+// // g++ OrgChart.cpp my_iterator.cpp my_main.cpp my_iterator.hpp OrgChart.hpp -o main
 
 // using namespace std;
 // using namespace ariel;

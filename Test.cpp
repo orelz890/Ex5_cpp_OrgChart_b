@@ -1,5 +1,5 @@
 // How to run:
-// g++ OrgChart.cpp my_iterator.cpp Test.cpp my_iterator.hpp OrgChart.hpp doctest.h TestRunner.cpp
+// g++ sources/OrgChart.cpp Test.cpp sources/my_iterator.hpp sources/OrgChart.hpp doctest.h TestRunner.cpp -o my_test
 #include "doctest.h"
 #include <iostream>
 #include <string>
@@ -134,9 +134,9 @@ TEST_CASE("Good tests"){
     CHECK(level.at(0) == pre.at(0));
     CHECK(pre.at(0) == reverse.at(0));
 
-    // ==============================
-    // Check the operators functions
-    // ==============================
+    // =============================
+    // Check the iterator operators
+    // =============================
 
     for (auto i = chart2.begin_reverse_order(); i != chart2.reverse_order(); ++i)
     {
@@ -209,7 +209,7 @@ TEST_CASE("Bad tests"){
     // Check add_root & add_sub funcs
     string order;
     int size = 0;
-
+    // Build a chart
     CHECK_NOTHROW(chart.add_root("top1"));
     CHECK_NOTHROW(chart.add_sub("top1", "top2"));
     CHECK_NOTHROW(chart.add_sub("top1", "top3"));
