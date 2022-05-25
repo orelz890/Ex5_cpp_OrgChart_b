@@ -1,5 +1,5 @@
 // How to run:
-// g++ sources/OrgChart.cpp Test.cpp sources/my_iterator.hpp sources/OrgChart.hpp doctest.h TestRunner.cpp -o my_test
+// g++ sources/OrgChart.cpp Test.cpp sources/my_iterator.hpp sources/my_iterator.cpp sources/OrgChart.hpp doctest.h TestRunner.cpp -o my_test
 #include "doctest.h"
 #include <iostream>
 #include <string>
